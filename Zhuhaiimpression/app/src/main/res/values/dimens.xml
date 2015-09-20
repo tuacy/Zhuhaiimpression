@@ -35,6 +35,7 @@
     <dimen name="margin_tiny_3">12dp</dimen>
     <dimen name="margin_tiny_2">8dp</dimen>
     <dimen name="margin_tiny_1">4dp</dimen>
+    <dimen name="margin_tiny_0">2dp</dimen>
 
     <!-- padding module -->
     <dimen name="padding_huge_3">42dp</dimen>
@@ -76,7 +77,19 @@
     <dimen name="elevation_tiny_2">4dp</dimen>
     <dimen name="elevation_tiny_1">2dp</dimen>
 
+    <!-- card corner radius -->
+    <dimen name="card_corner_radius_mini_3">12dp</dimen>
+    <dimen name="card_corner_radius_mini_2">10dp</dimen>
+    <dimen name="card_corner_radius_mini_1">8dp</dimen>
+    <dimen name="card_corner_radius_tiny_3">6dp</dimen>
+    <dimen name="card_corner_radius_tiny_2">4dp</dimen>
+    <dimen name="card_corner_radius_tiny_1">2dp</dimen>
+
+
     <!-- head portrait size -->
-    <dimen name="head_portrait_with">88dp</dimen>
+    <dimen name="head_portrait_width">88dp</dimen>
     <dimen name="head_portrait_height">88dp</dimen>
+
+    <dimen name="people_staff_icon_width">120dp</dimen>
+    <dimen name="people_staff_icon_height">90dp</dimen>
 </resources>

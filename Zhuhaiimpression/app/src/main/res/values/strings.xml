@@ -9,4 +9,17 @@
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+
+    <string name="pull_to_refresh_top_pull">Drop down refresh</string>
+    <string name="pull_to_refresh_top_release">Release refresh</string>
+    <string name="pull_to_refresh_top_refreshing">Refreshing</string>
+    <string name="pull_to_refresh_bottom_pull">Continue drag</string>
+    <string name="pull_to_refresh_bottom_release">Release load more</string>
+    <string name="pull_to_refresh_bottom_refreshing">Refreshing</string>
+    <string name="pull_to_refresh_no_data">No more result</string>
+
+    <string name="software">Software</string>
+    <string name="software_test">Software Test</string>
+    <string name="stock">Stock</string>
+    <string name="comprehensive">Comprehensive</string>
 </resources>

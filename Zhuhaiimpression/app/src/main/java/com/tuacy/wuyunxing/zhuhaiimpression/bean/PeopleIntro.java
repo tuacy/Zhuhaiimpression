@@ -10,44 +10,40 @@ import cn.bmob.v3.datatype.BmobFile;
  */
 public class PeopleIntro extends BmobObject {
 
-	private String   mName;
-	private String   mUrl;
-	private String   mDescriptor;
-	private BmobFile mPic;
-
-	public PeopleIntro() {
-		this.setTableName("people_intro");
-	}
+	private String name;
+	private String url;
+	private String descriptor;
+	private BmobFile picture;
 
 	public String getName() {
-		return mName;
+		return name;
 	}
 
 	public void setName(String name) {
-		this.mName = name;
+		this.name = name;
 	}
 
 	public String getUrl() {
-		return mUrl;
+		return url;
 	}
 
 	public void setUrl(String url) {
-		this.mUrl = url;
+		this.url = url;
 	}
 
 	public String getDescriptor() {
-		return mDescriptor;
+		return descriptor;
 	}
 
 	public void setDescriptor(String descriptor) {
-		this.mDescriptor = descriptor;
+		this.descriptor = descriptor;
 	}
 
 	public BmobFile getPic() {
-		return mPic;
+		return picture;
 	}
 
 	public void setPic(BmobFile pic) {
-		this.mPic = pic;
+		this.picture = pic;
 	}
 }

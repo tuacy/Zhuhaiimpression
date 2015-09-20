@@ -5,4 +5,8 @@
     <color name="accent">#FF4081</color>
     <color name="window_background">#FFF5F5F5</color>
     <color name="divider_line">#CBCED2</color>
+
+    <color name="transparent">#00ffffff</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
 </resources>

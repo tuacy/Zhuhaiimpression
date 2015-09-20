@@ -22,6 +22,7 @@ android {
 }
 
 dependencies {
+    compile project(':library')
     compile project(':PullToRefreshLibrary')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
@@ -37,4 +38,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'in.srain.cube:ultra-ptr:1.0.9@aar'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.malinskiy:superrecyclerview:1.1.1'
 }
