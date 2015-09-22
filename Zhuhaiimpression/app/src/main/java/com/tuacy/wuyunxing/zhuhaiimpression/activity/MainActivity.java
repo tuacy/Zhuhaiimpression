@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tuacy.wuyunxing.zhuhaiimpression.Constants;
 import com.tuacy.wuyunxing.zhuhaiimpression.R;
 import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseActivity;
 import com.tuacy.wuyunxing.zhuhaiimpression.fragment.LastNewFragment;
@@ -24,7 +23,6 @@ import com.tuacy.wuyunxing.zhuhaiimpression.widget.CircleTransformation;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 
 
