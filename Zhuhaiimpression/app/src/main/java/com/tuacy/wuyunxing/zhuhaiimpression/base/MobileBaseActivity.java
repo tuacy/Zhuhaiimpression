@@ -7,6 +7,6 @@ import android.support.v7.app.AppCompatActivity;
  * @date: 2015/9/18 15:56
  * @version: V1.0
  */
-public class MobileBaseActivity extends AppCompatActivity {
+public abstract class MobileBaseActivity extends AppCompatActivity {
 
 }

@@ -10,9 +10,9 @@ import cn.bmob.v3.datatype.BmobFile;
  */
 public class PeopleIntro extends BmobObject {
 
-	private String name;
-	private String url;
-	private String descriptor;
+	private String   name;
+	private String   url;
+	private String   descriptor;
 	private BmobFile picture;
 
 	public String getName() {

@@ -30,8 +30,6 @@ public class LastNewFragment extends MobileBaseFragment {
     ViewPager mViewPager;
 
 
-    private List<Fragment> mFragments;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_last_new, null);
@@ -51,17 +49,17 @@ public class LastNewFragment extends MobileBaseFragment {
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.software_test));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.stock));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.comprehensive));
-        mFragments = new ArrayList<Fragment>();
-        mFragments.add(new LastNewImageFragment());
-        mFragments.add(new PeopleStaffFragment());
-        mFragments.add(new PeopleStaffFragment());
-        mFragments.add(new PeopleStaffFragment());
+        List<Fragment> fragments = new ArrayList<Fragment>();
+        fragments.add(new LastNewImageFragment());
+        fragments.add(new PeopleStaffFragment());
+        fragments.add(new PeopleStaffFragment());
+        fragments.add(new PeopleStaffFragment());
         List<String> titles = new ArrayList<String>();
         titles.add(getResources().getString(R.string.software));
         titles.add(getResources().getString(R.string.software_test));
         titles.add(getResources().getString(R.string.stock));
         titles.add(getResources().getString(R.string.comprehensive));
-        FragmentAdapter fragmentAdapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), mFragments, titles);
+        FragmentAdapter fragmentAdapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), fragments, titles);
         mViewPager.setAdapter(fragmentAdapter);
         mViewPager.setOffscreenPageLimit(3);
         mTabLayout.setupWithViewPager(mViewPager);

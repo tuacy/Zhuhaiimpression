@@ -22,4 +22,7 @@
     <string name="software_test">Software Test</string>
     <string name="stock">Stock</string>
     <string name="comprehensive">Comprehensive</string>
+
+    <string name="no_more_data">No more data</string>
+    <string name="get_data_error">Get data error</string>
 </resources>

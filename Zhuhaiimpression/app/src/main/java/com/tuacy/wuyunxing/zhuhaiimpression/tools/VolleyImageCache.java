@@ -10,10 +10,10 @@ import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseApplication;
  */
 public class VolleyImageCache {
 
-    public static void networkImageViewUse(NetworkImageView iv, String url) {
-        ImageLoader imLoader = new ImageLoader(MobileBaseApplication.getInstance().getRequestQueue(), new BitmapCache());
-        iv.setDefaultImageResId(R.mipmap.pic_default);
-        iv.setErrorImageResId(R.mipmap.pic_error);
-        iv.setImageUrl(url, imLoader);
-    }
+	public static void networkImageViewUse(NetworkImageView iv, String url) {
+		ImageLoader imLoader = new ImageLoader(MobileBaseApplication.getInstance().getRequestQueue(), new BitmapCache());
+		iv.setDefaultImageResId(R.mipmap.pic_default);
+		iv.setErrorImageResId(R.mipmap.pic_error);
+		iv.setImageUrl(url, imLoader);
+	}
 }

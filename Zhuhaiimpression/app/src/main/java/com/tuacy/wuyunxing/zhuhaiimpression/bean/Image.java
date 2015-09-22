@@ -9,41 +9,42 @@ import cn.bmob.v3.datatype.BmobFile;
  * Created by tuacy on 2015/9/20.
  */
 public class Image extends BmobObject {
-    private BmobFile image;
-    private String author;
-    private String descriptor;
-    private BmobDate time;
 
-    public BmobDate getTime() {
-        return time;
-    }
+	private BmobFile image;
+	private String   author;
+	private String   descriptor;
+	private BmobDate time;
 
-    public void setTime(BmobDate time) {
-        this.time = time;
-    }
+	public BmobDate getTime() {
+		return time;
+	}
 
-    public BmobFile getImage() {
-        return image;
-    }
+	public void setTime(BmobDate time) {
+		this.time = time;
+	}
 
-    public void setImage(BmobFile image) {
-        this.image = image;
-    }
+	public BmobFile getImage() {
+		return image;
+	}
 
-    public String getAuthor() {
-        return author;
-    }
+	public void setImage(BmobFile image) {
+		this.image = image;
+	}
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
 
 
-    public String getDescriptor() {
-        return descriptor;
-    }
+	public String getDescriptor() {
+		return descriptor;
+	}
 
-    public void setDescriptor(String descriptor) {
-        this.descriptor = descriptor;
-    }
+	public void setDescriptor(String descriptor) {
+		this.descriptor = descriptor;
+	}
 }

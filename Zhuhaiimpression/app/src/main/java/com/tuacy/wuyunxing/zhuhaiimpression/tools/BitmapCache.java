@@ -10,34 +10,35 @@ import com.android.volley.toolbox.ImageLoader;
  */
 public class BitmapCache implements ImageLoader.ImageCache {
 
-    private LruCache<String, Bitmap> mCache;
-    public static int getDefaultLruCacheSize() {
+	private LruCache<String, Bitmap> mCache;
 
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+	public static int getDefaultLruCacheSize() {
 
-        final int cacheSize = maxMemory / 8;
+		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
-        return cacheSize;
-    }
+		final int cacheSize = maxMemory / 8;
 
-    public BitmapCache() {
-        int maxSize = getDefaultLruCacheSize();
-        mCache = new LruCache<String, Bitmap>(maxSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                return bitmap.getRowBytes() * bitmap.getHeight();
-            }
-        };
-    }
+		return cacheSize;
+	}
 
-    @Override
-    public Bitmap getBitmap(String url) {
-        return mCache.get(url);
-    }
+	public BitmapCache() {
+		int maxSize = getDefaultLruCacheSize();
+		mCache = new LruCache<String, Bitmap>(maxSize) {
+			@Override
+			protected int sizeOf(String key, Bitmap bitmap) {
+				return bitmap.getRowBytes() * bitmap.getHeight();
+			}
+		};
+	}
 
-    @Override
-    public void putBitmap(String url, Bitmap bitmap) {
-        mCache.put(url, bitmap);
-    }
+	@Override
+	public Bitmap getBitmap(String url) {
+		return mCache.get(url);
+	}
+
+	@Override
+	public void putBitmap(String url, Bitmap bitmap) {
+		mCache.put(url, bitmap);
+	}
 }
 

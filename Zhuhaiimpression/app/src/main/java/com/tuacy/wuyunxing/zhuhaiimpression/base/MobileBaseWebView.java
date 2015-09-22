@@ -7,7 +7,7 @@ import android.webkit.WebView;
 /**
  * Created by tuacy on 2015/9/20.
  */
-public class MobileBaseWebView extends WebView {
+public abstract class MobileBaseWebView extends WebView {
     /**
      * Constructor.
      * @param context The current context.
