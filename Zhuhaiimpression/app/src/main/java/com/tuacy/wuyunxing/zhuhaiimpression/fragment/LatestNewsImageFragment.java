@@ -42,6 +42,8 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements Swipe
 
 	private ImageAdapter mAdapter;
 	private List<Image>  mList;
+	private boolean isReachEnd = false;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,7 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements Swipe
 		mRecyclerViewImg.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 		mRecyclerViewImg.getRecyclerView().setItemAnimator(new OvershootInLeftAnimator());
 		mRecyclerViewImg.setRefreshListener(this);
-		mRecyclerViewImg.setupMoreListener(this, Constants.ONE_PAGE_NUMBER);
+		mRecyclerViewImg.setupMoreListener(this, 4);
 		mRecyclerViewImg.setRefreshingColorResources(android.R.color.holo_orange_light, android.R.color.holo_blue_light,
 													 android.R.color.holo_green_light, android.R.color.holo_red_light);
 		mRecyclerViewImg.setAdapter(mAdapter);
@@ -83,11 +85,17 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements Swipe
 
 	@Override
 	public void onRefresh() {
+		Log.d("vae_tag", "onRefresh");
+		mList = new ArrayList<Image>();
+		mAdapter = new ImageAdapter(mContext, mList);
+		mRecyclerViewImg.setAdapter(mAdapter);
 		queryData(0, Constants.ONE_PAGE_NUMBER, Constants.PULL_REFRESH);
 	}
 
 	@Override
 	public void onMoreAsked(int numberOfItems, int numberBeforeMore, int currentItemPos) {
+		Log.d("vae_tag", "aaaaaaaaaaaaa");
+		Log.d("vae_tag", " " + numberOfItems + " " + numberBeforeMore + " " + currentItemPos);
 		queryData(numberOfItems / Constants.ONE_PAGE_NUMBER, Constants.ONE_PAGE_NUMBER, Constants.PULL_LOAD_MORE);
 	}
 
@@ -102,23 +110,23 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements Swipe
 				if (list.size() > 0) {
 					if (Constants.PULL_REFRESH == actionType) {
 						mList.clear();
+						mList.addAll(list);
+						mAdapter.notifyDataSetChanged();
+					} else {
+						int insertFrom = mList.size();
+						mList.addAll(list);
+						int insertTo = mList.size();
+						mAdapter.notifyItemRangeInserted(insertFrom, insertTo);
 					}
-					mList.addAll(list);
-					mAdapter.notifyDataSetChanged();
 				} else {
 					snackbar(mFragmentView, R.string.no_more_data);
 				}
-				mRecyclerViewImg.hideMoreProgress();
-				mRecyclerViewImg.getSwipeToRefresh().setRefreshing(false);
 			}
 
 			@Override
 			public void onError(int i, String s) {
-				mRecyclerViewImg.hideMoreProgress();
-				mRecyclerViewImg.getSwipeToRefresh().setRefreshing(false);
 				snackbar(mFragmentView, R.string.get_data_error);
 			}
-
 		});
 	}
 
@@ -130,6 +138,10 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements Swipe
 
 		public void setListSource(List<Image> list) {
 			this.mListSource = list;
+		}
+
+		public List<Image> getListSource() {
+			return mListSource;
 		}
 
 		public ImageAdapter(Context context, List<Image> list) {
