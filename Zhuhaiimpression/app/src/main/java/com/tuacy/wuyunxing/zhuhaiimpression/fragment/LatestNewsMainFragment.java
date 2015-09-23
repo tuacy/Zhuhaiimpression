@@ -23,7 +23,7 @@ import butterknife.InjectView;
  * @date: 2015/9/18 17:36
  * @version: V1.0
  */
-public class LastNewFragment extends MobileBaseFragment {
+public class LatestNewsMainFragment extends MobileBaseFragment {
     @InjectView(R.id.last_new_tablayout)
     TabLayout mTabLayout;
     @InjectView(R.id.last_new_viewpager)
@@ -50,7 +50,7 @@ public class LastNewFragment extends MobileBaseFragment {
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.stock));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.comprehensive));
         List<Fragment> fragments = new ArrayList<Fragment>();
-        fragments.add(new LastNewImageFragment());
+        fragments.add(new LatestNewsImageFragment());
         fragments.add(new PeopleStaffFragment());
         fragments.add(new PeopleStaffFragment());
         fragments.add(new PeopleStaffFragment());

@@ -1,9 +1,6 @@
 package com.tuacy.wuyunxing.zhuhaiimpression.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,12 +96,12 @@ public class PeopleStaffFragment extends MobileBaseFragment {
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				queryData(0, Constants.PULL_DOWN_TO_REFRESH);
+				queryData(0, Constants.PULL_REFRESH);
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				queryData(mCurrentPage, Constants.PULL_UP_TO_REFRESH);
+				queryData(mCurrentPage, Constants.PULL_LOAD_MORE);
 			}
 		});
 		mPeopleStaffPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -165,7 +162,7 @@ public class PeopleStaffFragment extends MobileBaseFragment {
 			public void onSuccess(List<PeopleIntro> list) {
 				mPeopleStaffPullToRefreshListView.onRefreshComplete();
 				if (list.size() > 0) {
-					if (Constants.PULL_DOWN_TO_REFRESH == actionType) {
+					if (Constants.PULL_REFRESH == actionType) {
 						mCurrentPage = 0;
 						mListViewAdapter.getDataList().clear();
 					}

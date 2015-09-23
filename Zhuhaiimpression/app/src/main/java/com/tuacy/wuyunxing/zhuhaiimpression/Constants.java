@@ -7,6 +7,6 @@ public class Constants {
 
 	public static final int ONE_PAGE_NUMBER = 10;
 
-	public static final int PULL_UP_TO_REFRESH   = 0;
-	public static final int PULL_DOWN_TO_REFRESH = 1;
+	public static final int PULL_LOAD_MORE = 0;
+	public static final int PULL_REFRESH   = 1;
 }

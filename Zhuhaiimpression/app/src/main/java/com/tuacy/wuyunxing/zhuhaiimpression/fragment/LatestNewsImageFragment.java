@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,12 @@ import cn.bmob.v3.listener.FindListener;
 /**
  * Created by tuacy on 2015/9/20.
  */
-public class LastNewImageFragment extends MobileBaseFragment implements SwipeRefreshLayout.OnRefreshListener, OnMoreListener {
+public class LatestNewsImageFragment extends MobileBaseFragment implements SwipeRefreshLayout.OnRefreshListener, OnMoreListener {
 
 	@InjectView(R.id.superRecyclerView_img)
 	SuperRecyclerView mRecyclerViewImg;
 
-	private Context mContext;
+	private View mFragmentView;
 
 	private ImageAdapter mAdapter;
 	private List<Image>  mList;
@@ -45,18 +46,33 @@ public class LastNewImageFragment extends MobileBaseFragment implements SwipeRef
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContext = getActivity();
 		mList = new ArrayList<Image>();
 		mAdapter = new ImageAdapter(mContext, mList);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View fragmentView = inflater.inflate(R.layout.fragment_new_image, null);
-		ButterKnife.inject(this, fragmentView);
-		initView();
-		queryData(0, 0);
-		return fragmentView;
+		mFragmentView = inflater.inflate(R.layout.fragment_new_image, null);
+		ButterKnife.inject(this, mFragmentView);
+		return mFragmentView;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		mRecyclerViewImg.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+		mRecyclerViewImg.getRecyclerView().setItemAnimator(new OvershootInLeftAnimator());
+		mRecyclerViewImg.setRefreshListener(this);
+		mRecyclerViewImg.setupMoreListener(this, Constants.ONE_PAGE_NUMBER);
+		mRecyclerViewImg.setRefreshingColorResources(android.R.color.holo_orange_light, android.R.color.holo_blue_light,
+													 android.R.color.holo_green_light, android.R.color.holo_red_light);
+		mRecyclerViewImg.setAdapter(mAdapter);
+		if (mList.size() == 0) {
+			onRefresh();
+		} else {
+			mAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
@@ -65,46 +81,44 @@ public class LastNewImageFragment extends MobileBaseFragment implements SwipeRef
 		ButterKnife.reset(this);
 	}
 
-	private void initView() {
-		mRecyclerViewImg.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-		mRecyclerViewImg.getRecyclerView().setItemAnimator(new OvershootInLeftAnimator());
-		mRecyclerViewImg.setRefreshListener(this);
-		mRecyclerViewImg.setupMoreListener(this, 10);
-		mRecyclerViewImg.setRefreshingColorResources(android.R.color.holo_orange_light, android.R.color.holo_blue_light,
-													 android.R.color.holo_green_light, android.R.color.holo_red_light);
-		mRecyclerViewImg.setAdapter(mAdapter);
-	}
-
 	@Override
 	public void onRefresh() {
-
+		queryData(0, Constants.ONE_PAGE_NUMBER, Constants.PULL_REFRESH);
 	}
 
 	@Override
-	public void onMoreAsked(int i, int i1, int i2) {
-
+	public void onMoreAsked(int numberOfItems, int numberBeforeMore, int currentItemPos) {
+		queryData(numberOfItems / Constants.ONE_PAGE_NUMBER, Constants.ONE_PAGE_NUMBER, Constants.PULL_LOAD_MORE);
 	}
 
-	private void queryData(int page, final int actionType) {
+	private void queryData(int page, int pageNumber, final int actionType) {
 		BmobQuery peopleIntroQuery = new BmobQuery<Image>();
-		peopleIntroQuery.setLimit(Constants.ONE_PAGE_NUMBER);
-		peopleIntroQuery.setSkip(page * Constants.ONE_PAGE_NUMBER);
+		peopleIntroQuery.setLimit(pageNumber);
+		peopleIntroQuery.setSkip(page * pageNumber);
 		peopleIntroQuery.findObjects(mContext, new FindListener<Image>() {
 			@Override
 			public void onSuccess(List<Image> list) {
+
 				if (list.size() > 0) {
+					if (Constants.PULL_REFRESH == actionType) {
+						mList.clear();
+					}
 					mList.addAll(list);
 					mAdapter.notifyDataSetChanged();
-					mRecyclerViewImg.hideMoreProgress();
-					mRecyclerViewImg.getSwipeToRefresh().setRefreshing(false);
+				} else {
+					snackbar(mFragmentView, R.string.no_more_data);
 				}
+				mRecyclerViewImg.hideMoreProgress();
+				mRecyclerViewImg.getSwipeToRefresh().setRefreshing(false);
 			}
 
 			@Override
 			public void onError(int i, String s) {
 				mRecyclerViewImg.hideMoreProgress();
 				mRecyclerViewImg.getSwipeToRefresh().setRefreshing(false);
+				snackbar(mFragmentView, R.string.get_data_error);
 			}
+
 		});
 	}
 

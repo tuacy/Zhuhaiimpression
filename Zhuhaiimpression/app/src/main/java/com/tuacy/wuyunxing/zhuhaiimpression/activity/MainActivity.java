@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.tuacy.wuyunxing.zhuhaiimpression.R;
 import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseActivity;
-import com.tuacy.wuyunxing.zhuhaiimpression.fragment.LastNewFragment;
+import com.tuacy.wuyunxing.zhuhaiimpression.fragment.LatestNewsMainFragment;
 import com.tuacy.wuyunxing.zhuhaiimpression.fragment.PeopleStaffFragment;
 import com.tuacy.wuyunxing.zhuhaiimpression.networkstate.NetworkUtils;
 import com.tuacy.wuyunxing.zhuhaiimpression.widget.CircleTransformation;
@@ -38,9 +38,8 @@ public class MainActivity extends MobileBaseActivity {
 
 	private Context mContext;
 
-	private LastNewFragment     mLastNewFragment;
-	private PeopleStaffFragment mPeopleStaffFragment;
-	private FragmentTransaction mTransaction;
+	private LatestNewsMainFragment mLastNewFragment;
+	private PeopleStaffFragment    mPeopleStaffFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -137,27 +136,27 @@ public class MainActivity extends MobileBaseActivity {
 	};
 
 	private void setFragments(int id) {
-		mTransaction = getSupportFragmentManager().beginTransaction();
-		hideFragments(mTransaction);
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		hideFragments(transaction);
 		switch (id) {
 			case R.id.menu_people_staff:
 				if (null == mPeopleStaffFragment) {
 					mPeopleStaffFragment = new PeopleStaffFragment();
-					mTransaction.add(R.id.drawer_content, mPeopleStaffFragment);
+					transaction.add(R.id.drawer_content, mPeopleStaffFragment);
 				} else {
-					mTransaction.show(mPeopleStaffFragment);
+					transaction.show(mPeopleStaffFragment);
 				}
 				break;
 			case R.id.menu_last_new:
 				if (null == mLastNewFragment) {
-					mLastNewFragment = new LastNewFragment();
-					mTransaction.add(R.id.drawer_content, mLastNewFragment);
+					mLastNewFragment = new LatestNewsMainFragment();
+					transaction.add(R.id.drawer_content, mLastNewFragment);
 				} else {
-					mTransaction.show(mLastNewFragment);
+					transaction.show(mLastNewFragment);
 				}
 				break;
 		}
-		mTransaction.commit();
+		transaction.commit();
 	}
 
 	private void hideFragments(FragmentTransaction transaction) {
