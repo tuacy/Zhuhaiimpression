@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,17 +84,11 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements Swipe
 
 	@Override
 	public void onRefresh() {
-		Log.d("vae_tag", "onRefresh");
-		mList = new ArrayList<Image>();
-		mAdapter = new ImageAdapter(mContext, mList);
-		mRecyclerViewImg.setAdapter(mAdapter);
 		queryData(0, Constants.ONE_PAGE_NUMBER, Constants.PULL_REFRESH);
 	}
 
 	@Override
 	public void onMoreAsked(int numberOfItems, int numberBeforeMore, int currentItemPos) {
-		Log.d("vae_tag", "aaaaaaaaaaaaa");
-		Log.d("vae_tag", " " + numberOfItems + " " + numberBeforeMore + " " + currentItemPos);
 		queryData(numberOfItems / Constants.ONE_PAGE_NUMBER, Constants.ONE_PAGE_NUMBER, Constants.PULL_LOAD_MORE);
 	}
 
@@ -117,6 +110,7 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements Swipe
 						mList.addAll(list);
 						int insertTo = mList.size();
 						mAdapter.notifyItemRangeInserted(insertFrom, insertTo);
+						mRecyclerViewImg.getSwipeToRefresh().setRefreshing(false);
 					}
 				} else {
 					snackbar(mFragmentView, R.string.no_more_data);
@@ -167,7 +161,7 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements Swipe
 
 		@Override
 		public int getItemCount() {
-			return mListSource.size();
+			return mListSource == null ? 0 : mListSource.size();
 		}
 
 
