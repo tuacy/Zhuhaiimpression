@@ -8,6 +8,7 @@ import android.webkit.WebViewClient;
 
 import com.tuacy.wuyunxing.zhuhaiimpression.R;
 import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseActivity;
+import com.tuacy.wuyunxing.zhuhaiimpression.networkstate.NetworkUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -15,7 +16,7 @@ import butterknife.InjectView;
 /**
  * Created by tuacy on 2015/9/20.
  */
-public class PeopleStaffDetail extends MobileBaseActivity {
+public class PeopleStaffDetailActivity extends MobileBaseActivity {
 
 	public static final String PEOPLE_NAME = "people_name";
 	public static final String PEOPLE_URL  = "people_url";
@@ -45,6 +46,16 @@ public class PeopleStaffDetail extends MobileBaseActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		ButterKnife.reset(this);
+	}
+
+	@Override
+	protected void onNetworkConnected(NetworkUtils.NetworkType type) {
+
+	}
+
+	@Override
+	protected void onNetworkDisConnected() {
+
 	}
 
 	private void initView() {

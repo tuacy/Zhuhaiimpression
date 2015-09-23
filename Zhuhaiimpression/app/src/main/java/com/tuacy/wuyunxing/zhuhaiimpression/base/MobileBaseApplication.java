@@ -1,6 +1,8 @@
 package com.tuacy.wuyunxing.zhuhaiimpression.base;
 
 import android.app.Application;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -90,6 +92,12 @@ public class MobileBaseApplication extends Application {
 	}
 
 	private void globalSettings() {
-		Bmob.initialize(this, Constants.BMOB_APPLICATION_ID);
+		try {
+			ApplicationInfo appInfo = this.getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+			String id = appInfo.metaData.getString("bmob_application_id");
+			Bmob.initialize(this, id);
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }

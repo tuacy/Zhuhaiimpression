@@ -26,4 +26,6 @@
 
     <string name="no_more_data">没有更多的数据了</string>
     <string name="get_data_error">获取数据失败</string>
+
+    <string name="no_network_connect">网络连接已断开</string>
 </resources>

@@ -32,6 +32,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+        <!-- Bmob_application_id-->
+        <meta-data
+            android:name="bmob_application_id"
+            android:value="4389e966918ca2bd5c25abfbac67ef9d" />
+
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
@@ -43,8 +49,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.PeopleStaffDetail"
+            android:name=".activity.PeopleStaffDetailActivity"
             android:label="@string/drawer_menu_people_staff" />
+
+        <receiver
+            android:name=".networkstate.NetworkStateReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

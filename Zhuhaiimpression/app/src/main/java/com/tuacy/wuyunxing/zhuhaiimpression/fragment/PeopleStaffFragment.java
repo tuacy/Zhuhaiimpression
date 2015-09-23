@@ -1,6 +1,5 @@
 package com.tuacy.wuyunxing.zhuhaiimpression.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +21,7 @@ import com.tuacy.library.adapter.ViewHolderBase;
 import com.tuacy.library.adapter.ViewHolderCreator;
 import com.tuacy.wuyunxing.zhuhaiimpression.Constants;
 import com.tuacy.wuyunxing.zhuhaiimpression.R;
-import com.tuacy.wuyunxing.zhuhaiimpression.activity.PeopleStaffDetail;
+import com.tuacy.wuyunxing.zhuhaiimpression.activity.PeopleStaffDetailActivity;
 import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseFragment;
 import com.tuacy.wuyunxing.zhuhaiimpression.bean.PeopleIntro;
 import com.tuacy.wuyunxing.zhuhaiimpression.tools.VolleyImageCache;
@@ -48,17 +47,10 @@ public class PeopleStaffFragment extends MobileBaseFragment {
 	private View           mFragmentView;
 	private ILoadingLayout mILoadingLayout;
 
-	private Context mContext;
-
 	private ListViewDataAdapter<PeopleIntro> mListViewAdapter = null;
 
 	private int mCurrentPage = 0;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mContext = getActivity();
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,15 +110,12 @@ public class PeopleStaffFragment extends MobileBaseFragment {
 		mPeopleStaffPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(mContext, PeopleStaffDetail.class);
 				String name = mListViewAdapter.getDataList().get(position - 1).getName();
 				String url = mListViewAdapter.getDataList().get(position - 1).getUrl();
 				Bundle bundle = new Bundle();
-				bundle.putCharSequence(PeopleStaffDetail.PEOPLE_NAME, name);
-				bundle.putCharSequence(PeopleStaffDetail.PEOPLE_URL, url);
-				intent.putExtras(bundle);
-				startActivity(intent);
-//				((Activity)mContext).overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+				bundle.putCharSequence(PeopleStaffDetailActivity.PEOPLE_NAME, name);
+				bundle.putCharSequence(PeopleStaffDetailActivity.PEOPLE_URL, url);
+				goActivity(PeopleStaffDetailActivity.class, bundle);
 			}
 		});
 
@@ -184,14 +173,14 @@ public class PeopleStaffFragment extends MobileBaseFragment {
 					mListViewAdapter.notifyDataSetChanged();
 					mCurrentPage++;
 				} else {
-					Snackbar.make(mFragmentView, R.string.no_more_data, Snackbar.LENGTH_SHORT).show();
+					snackbar(mFragmentView, R.string.no_more_data);
 				}
 			}
 
 			@Override
 			public void onError(int i, String s) {
 				mPeopleStaffPullToRefreshListView.onRefreshComplete();
-				Snackbar.make(mFragmentView, R.string.get_data_error, Snackbar.LENGTH_SHORT).show();
+				snackbar(mFragmentView, R.string.get_data_error);
 			}
 		});
 	}

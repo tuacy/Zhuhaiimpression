@@ -13,6 +13,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+        <!-- activity animation -->
+        <!--<item name="android:windowAnimationStyle">@style/Animation.Activity.Style</item>-->
+        <item name="android:windowAnimationStyle">@style/Animation.Activity.Translucent.Style</item>
+
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -21,21 +25,40 @@
         <item name="android:windowContentOverlay">@android:color/transparent</item>
         <item name="android:windowBackground">@color/window_background</item>
 
-        <!-- activity animation -->
-        <item name="android:windowAnimationStyle">@style/Animation.Activity.Style</item>
+        <item name="android:windowIsTranslucent">true</item>
 
     </style>
 
-    <!-- config activity animation -->
-    <style name="Animation.Activity.Style" mce_bogus="1" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/activity_open_in_anim</item>
-        <item name="android:activityOpenExitAnimation">@anim/activity_open_out_anim</item>
-        <item name="android:activityCloseEnterAnimation">@anim/activity_close_in_anim</item>
-        <item name="android:activityCloseExitAnimation">@anim/activity_close_out_anim</item>
-    </style>
+    <!--&lt;!&ndash; config activity animation &ndash;&gt;-->
+    <!--<style name="Animation.Activity.Style" mce_bogus="1" parent="@android:style/Animation.Activity">-->
+        <!--<item name="android:activityOpenEnterAnimation">@anim/activity_open_in_anim</item>-->
+        <!--<item name="android:activityOpenExitAnimation">@anim/activity_open_out_anim</item>-->
+        <!--<item name="android:activityCloseEnterAnimation">@anim/activity_close_in_anim</item>-->
+        <!--<item name="android:activityCloseExitAnimation">@anim/activity_close_out_anim</item>-->
+    <!--</style>-->
 
-    <style name="Animation.Activity.Translucent.Style.Main" parent="@android:style/Animation.Translucent">
-        <item name="android:windowExitAnimation">@anim/activity_close_out_anim</item>
+    <!--<style name="Animation.Activity.Translucent.Style.Main" parent="@android:style/Animation.Translucent">-->
+        <!--<item name="android:windowExitAnimation">@anim/activity_close_out_anim</item>-->
+    <!--</style>-->
+
+    <!--<style name="Animation.Activity.Style" parent="@android:style/Animation.Activity">-->
+        <!--<item name="android:activityOpenEnterAnimation">@anim/base_slide_right_in</item>-->
+        <!--<item name="android:activityOpenExitAnimation">@anim/base_stay_orig</item>-->
+        <!--<item name="android:activityCloseEnterAnimation">@anim/base_stay_orig</item>-->
+        <!--<item name="android:activityCloseExitAnimation">@anim/base_slide_right_out</item>-->
+        <!--<item name="android:taskOpenEnterAnimation">@anim/base_slide_right_in</item>-->
+        <!--<item name="android:taskOpenExitAnimation">@anim/base_stay_orig</item>-->
+        <!--<item name="android:taskCloseEnterAnimation">@anim/base_stay_orig</item>-->
+        <!--<item name="android:taskCloseExitAnimation">@anim/base_slide_right_out</item>-->
+        <!--<item name="android:taskToFrontEnterAnimation">@anim/base_slide_right_in</item>-->
+        <!--<item name="android:taskToFrontExitAnimation">@anim/base_stay_orig</item>-->
+        <!--<item name="android:taskToBackEnterAnimation">@anim/base_stay_orig</item>-->
+        <!--<item name="android:taskToBackExitAnimation">@anim/base_slide_right_out</item>-->
+    <!--</style>-->
+
+    <style name="Animation.Activity.Translucent.Style" parent="@android:style/Animation.Translucent">
+        <item name="android:windowEnterAnimation">@anim/zoom_in</item>
+        <item name="android:windowExitAnimation">@anim/zoom_out</item>
     </style>
 
 </resources>

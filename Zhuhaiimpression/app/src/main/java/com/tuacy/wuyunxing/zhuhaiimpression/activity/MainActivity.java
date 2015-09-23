@@ -15,16 +15,15 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tuacy.wuyunxing.zhuhaiimpression.Constants;
 import com.tuacy.wuyunxing.zhuhaiimpression.R;
 import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseActivity;
 import com.tuacy.wuyunxing.zhuhaiimpression.fragment.LastNewFragment;
 import com.tuacy.wuyunxing.zhuhaiimpression.fragment.PeopleStaffFragment;
+import com.tuacy.wuyunxing.zhuhaiimpression.networkstate.NetworkUtils;
 import com.tuacy.wuyunxing.zhuhaiimpression.widget.CircleTransformation;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 
 
@@ -61,6 +60,16 @@ public class MainActivity extends MobileBaseActivity {
 		super.onDestroy();
 		ButterKnife.reset(this);
 		BmobUser.logOut(this);
+	}
+
+	@Override
+	protected void onNetworkConnected(NetworkUtils.NetworkType type) {
+
+	}
+
+	@Override
+	protected void onNetworkDisConnected() {
+		snackbar(mDrawerLayout, R.string.no_network_connect);
 	}
 
 	private void initView() {

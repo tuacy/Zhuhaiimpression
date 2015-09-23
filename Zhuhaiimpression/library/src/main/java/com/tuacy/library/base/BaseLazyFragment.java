@@ -20,7 +20,7 @@ public abstract class BaseLazyFragment extends Fragment {
 	}
 
 	/**
-	 * 第一次onResume中的调用onUserVisible避免操作与onFirstUserVisible操作重复
+	 * first time onResume call onUserVisible and call onFirstUserVisible avoid repetitive operation
 	 */
 	private boolean isFirstResume = true;
 
