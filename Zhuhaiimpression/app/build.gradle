@@ -44,4 +44,7 @@ dependencies {
     compile 'in.srain.cube:ultra-ptr:1.0.9@aar'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.malinskiy:superrecyclerview:1.1.1'
+
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'cn.bingoogolapple:bga-refreshlayout:1.0.7@aar'
 }

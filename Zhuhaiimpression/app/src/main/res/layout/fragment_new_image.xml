@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.malinskiy.superrecyclerview.SuperRecyclerView
+<!--    <com.malinskiy.superrecyclerview.SuperRecyclerView
         android:id="@+id/superRecyclerView_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,6 +14,19 @@
         app:recyclerClipToPadding="false"
         android:scrollbars="none"
         android:scrollbarStyle="outsideInset"
-        />
+        />-->
+
+    <cn.bingoogolapple.refreshlayout.BGARefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/BGA_Refresh_Layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_img"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none" />
+    </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
 
 </LinearLayout>
