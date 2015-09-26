@@ -13,6 +13,7 @@ public class Image extends BmobObject {
 	private BmobFile image;
 	private String   author;
 	private String   descriptor;
+	private String 	title;
 	private BmobDate time;
 
 	public BmobDate getTime() {
@@ -46,5 +47,13 @@ public class Image extends BmobObject {
 
 	public void setDescriptor(String descriptor) {
 		this.descriptor = descriptor;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

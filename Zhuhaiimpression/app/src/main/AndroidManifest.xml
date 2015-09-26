@@ -50,6 +50,10 @@
         </activity>
         <activity
             android:name=".activity.PeopleStaffDetailActivity"
+            android:label="@string/drawer_menu_people_staff" />ImageDetailActivity
+
+        <activity
+            android:name=".activity.ImageDetailActivity"
             android:label="@string/drawer_menu_people_staff" />
 
         <receiver

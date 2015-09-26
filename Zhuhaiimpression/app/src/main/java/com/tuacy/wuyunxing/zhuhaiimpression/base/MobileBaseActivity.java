@@ -1,5 +1,6 @@
 package com.tuacy.wuyunxing.zhuhaiimpression.base;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,8 @@ import com.tuacy.wuyunxing.zhuhaiimpression.networkstate.NetworkUtils;
  * @version: V1.0
  */
 public abstract class MobileBaseActivity extends AppCompatActivity {
+
+	protected Context mContext;
 
 	protected NetworkChangeObserver mNetworkChangeObserver = null;
 
@@ -72,6 +75,7 @@ public abstract class MobileBaseActivity extends AppCompatActivity {
 
 		NetworkStateReceiver.registerObserver(mNetworkChangeObserver);
 
+		mContext = this;
 	}
 
 	@Override

@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tuacy.wuyunxing.zhuhaiimpression.Constants;
 import com.tuacy.wuyunxing.zhuhaiimpression.R;
+import com.tuacy.wuyunxing.zhuhaiimpression.activity.ImageDetailActivity;
+import com.tuacy.wuyunxing.zhuhaiimpression.activity.PeopleStaffDetailActivity;
 import com.tuacy.wuyunxing.zhuhaiimpression.animation.OvershootInLeftAnimator;
 import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseFragment;
 import com.tuacy.wuyunxing.zhuhaiimpression.bean.Image;
@@ -20,7 +22,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemClickListener;
-import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemLongClickListener;
 import cn.bingoogolapple.androidcommon.adapter.BGARecyclerViewAdapter;
 import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
@@ -32,7 +33,7 @@ import cn.bmob.v3.listener.FindListener;
  * Created by tuacy on 2015/9/20.
  */
 public class LatestNewsImageFragment extends MobileBaseFragment
-	implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
+	implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener {
 
 	@InjectView(R.id.recycler_view_img)
 	RecyclerView     mRecyclerViewImg;
@@ -66,7 +67,6 @@ public class LatestNewsImageFragment extends MobileBaseFragment
 		mRecyclerViewImg.setItemAnimator(new OvershootInLeftAnimator());
 		mAdapter = new ImageAdapter(mRecyclerViewImg);
 		mAdapter.setOnRVItemClickListener(this);
-		mAdapter.setOnRVItemLongClickListener(this);
 		mRecyclerViewImg.setAdapter(mAdapter);
 		beginRefreshing();
 	}
@@ -134,13 +134,15 @@ public class LatestNewsImageFragment extends MobileBaseFragment
 
 	@Override
 	public void onRVItemClick(ViewGroup viewGroup, View view, int i) {
-
+		Image image = mAdapter.getDatas().get(i);
+		Bundle bundle = new Bundle();
+		bundle.putCharSequence(ImageDetailActivity.IMAGE_URL, image.getImage().getFileUrl(mContext));
+		bundle.putCharSequence(ImageDetailActivity.IMAGE_AUTHOR, image.getAuthor());
+		bundle.putCharSequence(ImageDetailActivity.IMAGE_DESCRIPTOR, image.getDescriptor());
+		bundle.putCharSequence(ImageDetailActivity.IMAGE_TITLE, image.getTitle());
+		goActivity(ImageDetailActivity.class, bundle);
 	}
 
-	@Override
-	public boolean onRVItemLongClick(ViewGroup viewGroup, View view, int i) {
-		return false;
-	}
 
 	private void beginRefreshing() {
 		mRefreshLayout.beginRefreshing();

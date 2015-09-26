@@ -36,8 +36,6 @@ public class MainActivity extends MobileBaseActivity {
 	@InjectView(R.id.drawer_layout)
 	DrawerLayout   mDrawerLayout;
 
-	private Context mContext;
-
 	private LatestNewsMainFragment mLastNewFragment;
 	private PeopleStaffFragment    mPeopleStaffFragment;
 
@@ -45,7 +43,6 @@ public class MainActivity extends MobileBaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		mContext = this;
 		ButterKnife.inject(this);
 		initView();
 		mNavigationView.setNavigationItemSelectedListener(mNavigationListener);

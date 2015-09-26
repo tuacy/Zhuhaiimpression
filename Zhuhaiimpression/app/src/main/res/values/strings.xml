@@ -26,4 +26,8 @@
     <string name="no_more_data">No more data</string>
     <string name="get_data_error">Get data error</string>
     <string name="no_network_connect">No network connect</string>
+
+    <string name="author">Author</string>
+    <string name="descriptor">Descriptor</string>
+
 </resources>

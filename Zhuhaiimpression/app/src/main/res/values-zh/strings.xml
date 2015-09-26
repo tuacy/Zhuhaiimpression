@@ -24,6 +24,9 @@
     <string name="stock">股票</string>
     <string name="comprehensive">综合</string>
 
+    <string name="author">作者</string>
+    <string name="descriptor">描述</string>
+
     <string name="no_more_data">没有更多的数据了</string>
     <string name="get_data_error">获取数据失败</string>
 

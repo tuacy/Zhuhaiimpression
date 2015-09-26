@@ -82,4 +82,12 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
+    <style name="Widget.CardContent.Vertical" parent="android:Widget">
+        <item name="android:paddingLeft">@dimen/padding_little_2</item>
+        <item name="android:paddingRight">@dimen/padding_little_2</item>
+        <item name="android:paddingTop">@dimen/padding_small_3</item>
+        <item name="android:paddingBottom">@dimen/padding_small_3</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
 </resources>
