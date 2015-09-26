@@ -1,15 +1,11 @@
 package com.tuacy.wuyunxing.zhuhaiimpression.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.tuacy.wuyunxing.zhuhaiimpression.Constants;
@@ -19,32 +15,32 @@ import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseFragment;
 import com.tuacy.wuyunxing.zhuhaiimpression.bean.Image;
 import com.tuacy.wuyunxing.zhuhaiimpression.tools.VolleyImageCache;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.bingoogolapple.refreshlayout.BGAMoocStyleRefreshViewHolder;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGAOnRVItemLongClickListener;
+import cn.bingoogolapple.androidcommon.adapter.BGARecyclerViewAdapter;
+import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
+import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
-import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by tuacy on 2015/9/20.
  */
-public class LatestNewsImageFragment extends MobileBaseFragment implements BGARefreshLayout.BGARefreshLayoutDelegate {
+public class LatestNewsImageFragment extends MobileBaseFragment
+	implements BGARefreshLayout.BGARefreshLayoutDelegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
 
 	@InjectView(R.id.recycler_view_img)
 	RecyclerView     mRecyclerViewImg;
 	@InjectView(R.id.BGA_Refresh_Layout)
 	BGARefreshLayout mRefreshLayout;
 
-	private View mFragmentView;
-
-	private ImageAdapter mAdapter;
-	private List<Image>  mList;
+	private View         mFragmentView = null;
+	private ImageAdapter mAdapter      = null;
 
 	private int mCurrentPage = 0;
 
@@ -52,32 +48,27 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements BGARe
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mList = new ArrayList<Image>();
-		mAdapter = new ImageAdapter(mContext, mList);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mFragmentView = inflater.inflate(R.layout.fragment_new_image, null);
 		ButterKnife.inject(this, mFragmentView);
+		initView();
 		return mFragmentView;
 	}
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-
+	private void initView() {
 		mRefreshLayout.setDelegate(this);
-		mRefreshLayout.setRefreshViewHolder(new BGAMoocStyleRefreshViewHolder(mContext, true));
+		mRefreshLayout.setRefreshViewHolder(new BGANormalRefreshViewHolder(mContext, true));
 
 		mRecyclerViewImg.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 		mRecyclerViewImg.setItemAnimator(new OvershootInLeftAnimator());
+		mAdapter = new ImageAdapter(mRecyclerViewImg);
+		mAdapter.setOnRVItemClickListener(this);
+		mAdapter.setOnRVItemLongClickListener(this);
 		mRecyclerViewImg.setAdapter(mAdapter);
-		if (mList.size() == 0) {
-			queryData(0, Constants.ONE_PAGE_NUMBER, Constants.PULL_REFRESH);
-		} else {
-			mAdapter.notifyDataSetChanged();
-		}
+		beginRefreshing();
 	}
 
 	@Override
@@ -96,25 +87,35 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements BGARe
 
 				if (list.size() > 0) {
 					if (Constants.PULL_REFRESH == actionType) {
-						mList.clear();
-						mList.addAll(list);
-						mAdapter.notifyDataSetChanged();
+						/** refresh */
+						mRefreshLayout.endRefreshing();
+						mAdapter.setDatas(list);
 						mCurrentPage = 0;
+						mRecyclerViewImg.smoothScrollToPosition(0);
 					} else {
-						int insertFrom = mList.size();
-						mList.addAll(list);
-						int insertTo = mList.size();
-						mAdapter.notifyItemRangeInserted(insertFrom, insertTo);
+						/** load more */
+						mRefreshLayout.endLoadingMore();
+						mAdapter.addMoreDatas(list);
 					}
-					mCurrentPage ++;
+					mCurrentPage++;
 				} else {
+					if (Constants.PULL_REFRESH == actionType) {
+						mRefreshLayout.endRefreshing();
+					} else {
+						mRefreshLayout.endLoadingMore();
+					}
 					snackbar(mFragmentView, R.string.no_more_data);
 				}
-				mRefreshLayout.endRefreshing();
+
 			}
 
 			@Override
 			public void onError(int i, String s) {
+				if (Constants.PULL_REFRESH == actionType) {
+					mRefreshLayout.endRefreshing();
+				} else {
+					mRefreshLayout.endLoadingMore();
+				}
 				snackbar(mFragmentView, R.string.get_data_error);
 			}
 		});
@@ -122,70 +123,41 @@ public class LatestNewsImageFragment extends MobileBaseFragment implements BGARe
 
 	@Override
 	public void onBGARefreshLayoutBeginRefreshing(BGARefreshLayout bgaRefreshLayout) {
-		Log.d("vae_tag", "onBGARefreshLayoutBeginRefreshing");
 		queryData(0, Constants.ONE_PAGE_NUMBER, Constants.PULL_REFRESH);
 	}
 
 	@Override
 	public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout bgaRefreshLayout) {
-		Log.d("vae_tag", "onBGARefreshLayoutBeginLoadingMore");
 		queryData(mCurrentPage, Constants.ONE_PAGE_NUMBER, Constants.PULL_LOAD_MORE);
 		return true;
 	}
 
-
-	private class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
-
-		private List<Image>    mListSource;
-		private LayoutInflater mInflater;
-
-		public void setListSource(List<Image> list) {
-			this.mListSource = list;
-		}
-
-		public List<Image> getListSource() {
-			return mListSource;
-		}
-
-		public ImageAdapter(Context context, List<Image> list) {
-			super();
-			this.mListSource = list;
-			mInflater = LayoutInflater.from(context);
-		}
-
-		@Override
-		public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-			View contentView = mInflater.inflate(R.layout.item_new_image, parent, false);
-			ViewHolder holder = new ViewHolder(contentView);
-			return holder;
-		}
-
-		@Override
-		public void onBindViewHolder(ViewHolder holder, final int position) {
-			BmobFile imageFile = mListSource.get(position).getImage();
-			String url = imageFile.getFileUrl(mContext);
-			VolleyImageCache.networkImageViewUse(holder.mPeopleHead, url);
-			holder.mImageDescriptor.setText(mListSource.get(position).getDescriptor());
-		}
-
-		@Override
-		public int getItemCount() {
-			return mListSource == null ? 0 : mListSource.size();
-		}
-
-
-		class ViewHolder extends RecyclerView.ViewHolder {
-
-			NetworkImageView mPeopleHead;
-			TextView         mImageDescriptor;
-
-			public ViewHolder(View convertView) {
-				super(convertView);
-				mPeopleHead = (NetworkImageView) convertView.findViewById(R.id.network_image_view_new);
-				mImageDescriptor = (TextView) convertView.findViewById(R.id.text_view_image_descriptor);
-			}
-		}
+	@Override
+	public void onRVItemClick(ViewGroup viewGroup, View view, int i) {
 
 	}
 
+	@Override
+	public boolean onRVItemLongClick(ViewGroup viewGroup, View view, int i) {
+		return false;
+	}
+
+	private void beginRefreshing() {
+		mRefreshLayout.beginRefreshing();
+	}
+
+
+	private class ImageAdapter extends BGARecyclerViewAdapter<Image> {
+
+		public ImageAdapter(RecyclerView recyclerView) {
+			super(recyclerView, R.layout.item_new_image);
+		}
+
+		@Override
+		protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, int i, Image image) {
+			bgaViewHolderHelper.setText(R.id.text_view_image_descriptor, image.getDescriptor());
+			VolleyImageCache.networkImageViewUse((NetworkImageView) bgaViewHolderHelper.getView(R.id.network_image_view_new),
+												 image.getImage().getFileUrl(mContext));
+		}
+	}
 }

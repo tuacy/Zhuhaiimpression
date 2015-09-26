@@ -5,7 +5,7 @@ package com.tuacy.wuyunxing.zhuhaiimpression;
  */
 public class Constants {
 
-	public static final int ONE_PAGE_NUMBER = 4;
+	public static final int ONE_PAGE_NUMBER = 8;
 
 	public static final int PULL_LOAD_MORE = 0;
 	public static final int PULL_REFRESH   = 1;

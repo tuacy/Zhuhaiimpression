@@ -93,4 +93,6 @@
     <dimen name="people_staff_icon_width">120dp</dimen>
     <dimen name="people_staff_icon_height">90dp</dimen>
     <dimen name="people_staff_descriptor_height">90dp</dimen>
+
+    <dimen name="navigation_header_height">200dp</dimen>
 </resources>
