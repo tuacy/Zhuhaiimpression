@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.tencent.connect.auth.QQAuth;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+import com.tuacy.wuyunxing.zhuhaiimpression.Constants;
 import com.tuacy.wuyunxing.zhuhaiimpression.R;
 import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseActivity;
 import com.tuacy.wuyunxing.zhuhaiimpression.fragment.LatestNewsMainFragment;
@@ -24,6 +30,7 @@ import com.tuacy.wuyunxing.zhuhaiimpression.widget.CircleTransformation;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
 
 
@@ -39,6 +46,7 @@ public class MainActivity extends MobileBaseActivity {
 	private LatestNewsMainFragment mLastNewFragment;
 	private PeopleStaffFragment    mPeopleStaffFragment;
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,6 +57,11 @@ public class MainActivity extends MobileBaseActivity {
 		initDrawer();
 		setFragments(R.id.menu_people_staff);
 		mToolBar.setTitle(R.string.drawer_menu_people_staff);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
 	}
 
 	@Override
@@ -132,6 +145,15 @@ public class MainActivity extends MobileBaseActivity {
 		}
 	};
 
+	@OnClick(R.id.iv_user_head)
+	void clickOnImageView(View view) {
+		switch (view.getId()) {
+			case R.id.iv_user_head:
+				goActivity(TestActivity.class);
+				break;
+		}
+	}
+
 	private void setFragments(int id) {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		hideFragments(transaction);
@@ -186,4 +208,5 @@ public class MainActivity extends MobileBaseActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
+
 }
