@@ -65,18 +65,15 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true">
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="tencent222222" />
+                <data android:scheme="tencent1104823721" />
             </intent-filter>
         </activity>
 
@@ -86,10 +83,6 @@
 
         <activity
             android:name=".activity.ImageDetailActivity"
-            android:label="@string/drawer_menu_people_staff" />
-
-        <activity
-            android:name=".activity.TestActivity"
             android:label="@string/drawer_menu_people_staff" />
 
         <receiver

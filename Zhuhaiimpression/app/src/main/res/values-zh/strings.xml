@@ -31,4 +31,6 @@
     <string name="get_data_error">获取数据失败</string>
 
     <string name="no_network_connect">网络连接已断开</string>
+    <string name="qq_login_in">登入</string>
+    <string name="qq_login_out">退出</string>
 </resources>

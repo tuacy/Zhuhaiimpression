@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
+import com.tencent.connect.auth.QQAuth;
 import com.tuacy.wuyunxing.zhuhaiimpression.Constants;
 
 import cn.bmob.v3.Bmob;
@@ -29,7 +30,8 @@ public class MobileBaseApplication extends Application {
 	/**
 	 * Global request queue for Volley
 	 */
-	private RequestQueue mRequestQueue;
+	private       RequestQueue mRequestQueue;
+	private QQAuth       mQQAuth;
 
 	@Override
 	public void onCreate() {
@@ -59,6 +61,19 @@ public class MobileBaseApplication extends Application {
 			}
 		}
 		return mRequestQueue;
+	}
+
+	public QQAuth getQQAuth() {
+		// lazy initialize the request queue, the queue instance will be
+		// created when it is accessed for the first time
+		if (mQQAuth == null) {
+			synchronized (MobileBaseApplication.class) {
+				if (mQQAuth == null) {
+					mQQAuth = QQAuth.createInstance(Constants.QQ_APP_ID, this.getApplicationContext());
+				}
+			}
+		}
+		return mQQAuth;
 	}
 
 	/**

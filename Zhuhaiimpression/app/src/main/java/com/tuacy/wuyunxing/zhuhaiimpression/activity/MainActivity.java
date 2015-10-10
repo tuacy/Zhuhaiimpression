@@ -1,6 +1,5 @@
 package com.tuacy.wuyunxing.zhuhaiimpression.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -8,14 +7,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -23,10 +24,14 @@ import com.tencent.tauth.UiError;
 import com.tuacy.wuyunxing.zhuhaiimpression.Constants;
 import com.tuacy.wuyunxing.zhuhaiimpression.R;
 import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseActivity;
+import com.tuacy.wuyunxing.zhuhaiimpression.base.MobileBaseApplication;
 import com.tuacy.wuyunxing.zhuhaiimpression.fragment.LatestNewsMainFragment;
 import com.tuacy.wuyunxing.zhuhaiimpression.fragment.PeopleStaffFragment;
 import com.tuacy.wuyunxing.zhuhaiimpression.networkstate.NetworkUtils;
 import com.tuacy.wuyunxing.zhuhaiimpression.widget.CircleTransformation;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -43,15 +48,23 @@ public class MainActivity extends MobileBaseActivity {
 	@InjectView(R.id.drawer_layout)
 	DrawerLayout   mDrawerLayout;
 
+	private ImageView mImageViewUserHead;
+	private Button    mButtonLogin;
+	private TextView  mTextViewUserName;
+
 	private LatestNewsMainFragment mLastNewFragment;
 	private PeopleStaffFragment    mPeopleStaffFragment;
 
+	public static QQAuth   mQQAuth  = MobileBaseApplication.getInstance().getQQAuth();
+	private       UserInfo mInfo    = null;
+	private       Tencent  mTencent = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ButterKnife.inject(this);
+		mTencent = Tencent.createInstance(Constants.QQ_APP_ID, MainActivity.this);
 		initView();
 		mNavigationView.setNavigationItemSelectedListener(mNavigationListener);
 		initDrawer();
@@ -82,8 +95,11 @@ public class MainActivity extends MobileBaseActivity {
 	}
 
 	private void initView() {
-		ImageView userHead = (ImageView) findViewById(R.id.iv_user_head);
-		Picasso.with(mContext).load(R.mipmap.acount).transform(new CircleTransformation()).into(userHead);
+		mImageViewUserHead = (ImageView) findViewById(R.id.iv_user_head);
+		Picasso.with(mContext).load(R.mipmap.acount).transform(new CircleTransformation()).into(mImageViewUserHead);
+		mButtonLogin = (Button) findViewById(R.id.button_qq_login);
+		mButtonLogin.setText(R.string.qq_login_in);
+		mTextViewUserName = (TextView) findViewById(R.id.tv_user_name);
 	}
 
 	private void initDrawer() {
@@ -145,11 +161,11 @@ public class MainActivity extends MobileBaseActivity {
 		}
 	};
 
-	@OnClick(R.id.iv_user_head)
-	void clickOnImageView(View view) {
+	@OnClick(R.id.button_qq_login)
+	void viewOnClick(View view) {
 		switch (view.getId()) {
-			case R.id.iv_user_head:
-				goActivity(TestActivity.class);
+			case R.id.button_qq_login:
+				qqLogin();
 				break;
 		}
 	}
@@ -205,8 +221,89 @@ public class MainActivity extends MobileBaseActivity {
 		if (id == R.id.action_settings) {
 			return true;
 		}
-
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void qqLogin() {
+		if (!mQQAuth.isSessionValid()) {
+			mQQAuth.login(this, "all", null);
+			mTencent.login(this, "all", new BaseUiListener() {
+				@Override
+				public void onComplete(Object response) {
+					super.onComplete(response);
+					mButtonLogin.setText(R.string.qq_login_out);
+				}
+
+				@Override
+				protected void doComplete(JSONObject values) {
+					super.doComplete(values);
+					updateUseInfoUI(true);
+				}
+			});
+		} else {
+			mQQAuth.logout(this);
+			mButtonLogin.setText(R.string.qq_login_in);
+			updateUseInfoUI(false);
+		}
+	}
+
+	private void updateUseInfoUI(boolean login) {
+		if (login) {
+			if (mQQAuth != null && mQQAuth.isSessionValid()) {
+				mInfo = new UserInfo(this, mQQAuth.getQQToken());
+				mInfo.getUserInfo(new IUiListener() {
+
+					@Override
+					public void onComplete(Object o) {
+						JSONObject json = (JSONObject) o;
+						if (json.has("figureurl")) {
+							try {
+								Picasso.with(mContext)
+									   .load(json.getString("figureurl_qq_2"))
+									   .transform(new CircleTransformation())
+									   .into(mImageViewUserHead);
+								mTextViewUserName.setText(json.getString("nickname"));
+							} catch (JSONException e) {
+
+							}
+						}
+					}
+
+					@Override
+					public void onError(UiError uiError) {
+
+					}
+
+					@Override
+					public void onCancel() {
+
+					}
+				});
+			}
+		} else {
+			Picasso.with(mContext).load(R.mipmap.acount).transform(new CircleTransformation()).into(mImageViewUserHead);
+			mTextViewUserName.setText("");
+		}
+	}
+
+	private class BaseUiListener implements IUiListener {
+
+		@Override
+		public void onComplete(Object response) {
+			doComplete((JSONObject) response);
+		}
+
+		protected void doComplete(JSONObject values) {
+
+		}
+
+		@Override
+		public void onError(UiError e) {
+		}
+
+		@Override
+		public void onCancel() {
+
+		}
+	}
 }

@@ -12,6 +12,6 @@ public class Constants {
 
 
 	/** qq login */
-	public static final String QQ_APP_ID = "222222";
+	public static final String QQ_APP_ID = "1104823721";
 	public static final String QQ_APP_KEY = "KKomJJlmGSBREtDI";
 }
