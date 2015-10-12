@@ -1,5 +1,6 @@
 package com.tuacy.wuyunxing.zhuhaiimpression.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -29,9 +30,15 @@ import com.tuacy.wuyunxing.zhuhaiimpression.fragment.LatestNewsMainFragment;
 import com.tuacy.wuyunxing.zhuhaiimpression.fragment.PeopleStaffFragment;
 import com.tuacy.wuyunxing.zhuhaiimpression.networkstate.NetworkUtils;
 import com.tuacy.wuyunxing.zhuhaiimpression.widget.CircleTransformation;
+import com.tuacy.wuyunxing.zhuhaiimpression.widget.SimpleListDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -161,12 +168,15 @@ public class MainActivity extends MobileBaseActivity {
 		}
 	};
 
-	@OnClick(R.id.button_qq_login)
+	@OnClick({R.id.button_qq_login,
+			  R.id.iv_user_head})
 	void viewOnClick(View view) {
 		switch (view.getId()) {
 			case R.id.button_qq_login:
 				qqLogin();
 				break;
+			case R.id.iv_user_head:
+				startActivity(new Intent(this, TestActivity.class));
 		}
 	}
 
@@ -225,26 +235,27 @@ public class MainActivity extends MobileBaseActivity {
 	}
 
 	private void qqLogin() {
-		if (!mQQAuth.isSessionValid()) {
-			mQQAuth.login(this, "all", null);
-			mTencent.login(this, "all", new BaseUiListener() {
-				@Override
-				public void onComplete(Object response) {
-					super.onComplete(response);
-					mButtonLogin.setText(R.string.qq_login_out);
-				}
-
-				@Override
-				protected void doComplete(JSONObject values) {
-					super.doComplete(values);
-					updateUseInfoUI(true);
-				}
-			});
-		} else {
-			mQQAuth.logout(this);
-			mButtonLogin.setText(R.string.qq_login_in);
-			updateUseInfoUI(false);
-		}
+		showActionSelectDialog();
+//		if (!mQQAuth.isSessionValid()) {
+//			mQQAuth.login(this, "all", null);
+//			mTencent.login(this, "all", new BaseUiListener() {
+//				@Override
+//				public void onComplete(Object response) {
+//					super.onComplete(response);
+//					mButtonLogin.setText(R.string.qq_login_out);
+//				}
+//
+//				@Override
+//				protected void doComplete(JSONObject values) {
+//					super.doComplete(values);
+//					updateUseInfoUI(true);
+//				}
+//			});
+//		} else {
+//			mQQAuth.logout(this);
+//			mButtonLogin.setText(R.string.qq_login_in);
+//			updateUseInfoUI(false);
+//		}
 	}
 
 	private void updateUseInfoUI(boolean login) {
@@ -305,5 +316,58 @@ public class MainActivity extends MobileBaseActivity {
 		public void onCancel() {
 
 		}
+	}
+
+	private void showActionSelectDialog() {
+		SimpleListDialog.OnItemClickListener onItemClickListener = new SimpleListDialog.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(View view, int position, int tag) {
+				switch (tag) {
+					case 0:
+						Snackbar.make(getCurrentFocus(), "click", Snackbar.LENGTH_SHORT)
+								.setAction("Right", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Toast.makeText(MainActivity.this, "Yes", Toast.LENGTH_SHORT).show();
+									}
+								})
+								.show();
+						break;
+					case 1:
+						Snackbar.make(getCurrentFocus(), "click", Snackbar.LENGTH_SHORT)
+								.setAction("Right", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Toast.makeText(MainActivity.this, "Yes", Toast.LENGTH_SHORT).show();
+									}
+								})
+								.show();
+					default:
+						break;
+				}
+			}
+		};
+		new SimpleListDialog.Builder(MainActivity.this).setDisplayData(getPopupsData(), new String[]{"name",
+																									 "icon",
+																									 "tag"})
+													   .setCanceledOnTouchOutside(true)
+													   .setOnItemClickListener(onItemClickListener)
+													   .show();
+	}
+
+	private List<? extends Map<String, ?>> getPopupsData() {
+		List<Map<String, Integer>> list = new ArrayList<Map<String, Integer>>();
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("name", R.string.photo);
+		map.put("tag", 0);
+		list.add(map);
+
+		map = new HashMap<String, Integer>();
+		map.put("name", R.string.video);
+		map.put("tag", 1);
+		list.add(map);
+
+		return list;
 	}
 }

@@ -93,6 +93,10 @@
             android:name=".activity.ImageDetailActivity"
             android:label="@string/drawer_menu_people_staff" />
 
+        <activity
+            android:name=".activity.TestActivity"
+            android:label="@string/drawer_menu_people_staff" />
+
         <receiver
             android:name=".networkstate.NetworkStateReceiver"
             android:enabled="true">

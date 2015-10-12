@@ -33,4 +33,7 @@
     <string name="no_network_connect">网络连接已断开</string>
     <string name="qq_login_in">登入</string>
     <string name="qq_login_out">退出</string>
+
+    <string name="photo">图片</string>
+    <string name="video">视频</string>
 </resources>

@@ -10,4 +10,9 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="red">#0000FF</color>
+    <color name="black_70alpha">#AF000000</color>
+    <color name="black_10alpha">#19000000</color>
+
+
+    <color name="activity_background">#fff0f0f0</color>
 </resources>
