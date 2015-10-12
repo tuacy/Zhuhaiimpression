@@ -12,6 +12,8 @@ import com.tuacy.wuyunxing.zhuhaiimpression.networkstate.NetworkChangeObserver;
 import com.tuacy.wuyunxing.zhuhaiimpression.networkstate.NetworkStateReceiver;
 import com.tuacy.wuyunxing.zhuhaiimpression.networkstate.NetworkUtils;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * @author: tuacy
  * @date: 2015/9/18 15:56
@@ -76,6 +78,18 @@ public abstract class MobileBaseActivity extends AppCompatActivity {
 		NetworkStateReceiver.registerObserver(mNetworkChangeObserver);
 
 		mContext = this;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(getApplicationContext());
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(getApplicationContext());
 	}
 
 	@Override

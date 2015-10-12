@@ -1,8 +1,10 @@
 package com.tuacy.wuyunxing.zhuhaiimpression.base;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -12,37 +14,38 @@ import com.android.volley.toolbox.Volley;
 import com.tencent.connect.auth.QQAuth;
 import com.tuacy.wuyunxing.zhuhaiimpression.Constants;
 
+import de.greenrobot.event.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.bmob.v3.Bmob;
+import cn.jpush.android.api.JPushInterface;
 
 /**
  * @author: tuacy
  * @date: 2015/9/18 15:56
  * @version: V1.0
  */
-public class MobileBaseApplication extends Application {
+public class MobileBaseApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
 	public static final String TAG = "VolleyPatterns";
-	/**
-	 * A singleton instance of the application class for easy access in other places
-	 */
+
 	private static MobileBaseApplication sInstance;
+	private final List<Activity> mActivities = new ArrayList<Activity>();
 
 	/**
 	 * Global request queue for Volley
 	 */
-	private       RequestQueue mRequestQueue;
+	private RequestQueue mRequestQueue;
 	private QQAuth       mQQAuth;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		sInstance = this;
-		globalSettings();
 	}
 
-	/**
-	 * @return ApplicationController singleton instance
-	 */
 	public static synchronized MobileBaseApplication getInstance() {
 		return sInstance;
 	}
@@ -114,5 +117,71 @@ public class MobileBaseApplication extends Application {
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private int mActivityCount = 0;
+
+	public List<Activity> getActivities() {
+		return mActivities;
+	}
+
+	@Override
+	public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+		if (mActivityCount == 0) {
+			initializeApplication();
+		}
+		mActivities.add(activity);
+		mActivityCount++;
+	}
+
+	@Override
+	public void onActivityStarted(Activity activity) {
+
+	}
+
+	@Override
+	public void onActivityResumed(Activity activity) {
+
+	}
+
+	@Override
+	public void onActivityPaused(Activity activity) {
+
+	}
+
+	@Override
+	public void onActivityStopped(Activity activity) {
+
+	}
+
+	@Override
+	public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+	}
+
+	@Override
+	public void onActivityDestroyed(Activity activity) {
+		mActivityCount--;
+		mActivities.remove(activity);
+		if (mActivityCount == 0) {
+			deinitializeApplication();
+		}
+	}
+
+	public void exit() {
+		for (int i = mActivities.size() - 1; i >= 0; i--) {
+			Activity activity = mActivities.get(i);
+			activity.finish();
+		}
+	}
+
+	protected void initializeApplication() {
+		globalSettings();
+		/** init JPush */
+		JPushInterface.init(getApplicationContext());
+	}
+
+	protected void deinitializeApplication() {
+		JPushInterface.stopPush(getApplicationContext());
 	}
 }
