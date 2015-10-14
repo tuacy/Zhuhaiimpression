@@ -23,6 +23,7 @@ android {
     compileOptions {
         encoding "UTF-8"
     }
+
 }
 
 dependencies {

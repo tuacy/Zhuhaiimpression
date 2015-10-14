@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,8 +14,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 import com.tencent.connect.auth.QQAuth;
 import com.tuacy.wuyunxing.zhuhaiimpression.Constants;
-
-import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +42,7 @@ public class MobileBaseApplication extends Application implements Application.Ac
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		registerActivityLifecycleCallbacks(this);
 		sInstance = this;
 	}
 
@@ -109,7 +109,7 @@ public class MobileBaseApplication extends Application implements Application.Ac
 		}
 	}
 
-	private void globalSettings() {
+	private void bmobInitialize() {
 		try {
 			ApplicationInfo appInfo = this.getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
 			String id = appInfo.metaData.getString("bmob_application_id");
@@ -127,6 +127,7 @@ public class MobileBaseApplication extends Application implements Application.Ac
 
 	@Override
 	public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+		Log.d("vae_tag", "onActivityCreated");
 		if (mActivityCount == 0) {
 			initializeApplication();
 		}
@@ -176,7 +177,7 @@ public class MobileBaseApplication extends Application implements Application.Ac
 	}
 
 	protected void initializeApplication() {
-		globalSettings();
+		bmobInitialize();
 		/** init JPush */
 		JPushInterface.init(getApplicationContext());
 	}
