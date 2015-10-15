@@ -147,7 +147,6 @@
             </intent-filter>
         </service>
 
-
         <!-- Required SDK核心功能-->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
