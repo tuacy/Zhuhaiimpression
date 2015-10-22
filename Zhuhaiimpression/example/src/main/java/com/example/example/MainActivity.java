@@ -1,156 +1,36 @@
 package com.example.example;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
+import android.widget.ListView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.example.example.base.MobileBaseActivity;
 import com.example.example.networkstate.NetworkUtils;
-import com.nineoldandroids.view.ViewHelper;
+import com.example.example.tree.CustomerTreeAdapter;
+import com.example.example.tree.bean.FileBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends MobileBaseActivity {
 
-	private SwipeLayout sample1, sample2, sample3;
+	private ListView            mListView;
+	private CustomerTreeAdapter mAdapter;
+	private List<FileBean>      mDatas;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		mListView = (ListView) findViewById(R.id.list_view);
+		getDatas();
+		try {
+			mAdapter = new CustomerTreeAdapter(mListView, this, mDatas, 1);
+			mListView.setAdapter(mAdapter);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 
-
-		sample1 = (SwipeLayout) findViewById(R.id.sample1);
-		sample1.setShowMode(SwipeLayout.ShowMode.PullOut);
-		View starBottView = sample1.findViewById(R.id.starbott);
-		sample1.addDrag(SwipeLayout.DragEdge.Left, sample1.findViewById(R.id.bottom_wrapper));
-		sample1.addDrag(SwipeLayout.DragEdge.Right, sample1.findViewById(R.id.bottom_wrapper_2));
-		sample1.addDrag(SwipeLayout.DragEdge.Top, starBottView);
-		sample1.addDrag(SwipeLayout.DragEdge.Bottom, starBottView);
-		sample1.addRevealListener(R.id.delete, new SwipeLayout.OnRevealListener() {
-			@Override
-			public void onReveal(View child, SwipeLayout.DragEdge edge, float fraction, int distance) {
-
-			}
-		});
-
-		sample1.getSurfaceView().setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Click on surface", Toast.LENGTH_SHORT).show();
-				Log.d(MainActivity.class.getName(), "click on surface");
-			}
-		});
-		sample1.getSurfaceView().setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				Toast.makeText(MainActivity.this, "longClick on surface", Toast.LENGTH_SHORT).show();
-				Log.d(MainActivity.class.getName(), "longClick on surface");
-				return true;
-			}
-		});
-		sample1.findViewById(R.id.star2).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Star", Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		sample1.findViewById(R.id.trash2).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Trash Bin", Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		sample1.findViewById(R.id.magnifier2).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Magnifier", Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		sample1.addRevealListener(R.id.starbott, new SwipeLayout.OnRevealListener() {
-			@Override
-			public void onReveal(View child, SwipeLayout.DragEdge edge, float fraction, int distance) {
-				View star = child.findViewById(R.id.star);
-				float d = child.getHeight() / 2 - star.getHeight() / 2;
-				ViewHelper.setTranslationY(star, d * fraction);
-				ViewHelper.setScaleX(star, fraction + 0.6f);
-				ViewHelper.setScaleY(star, fraction + 0.6f);
-			}
-		});
-
-		//sample2
-
-		sample2 = (SwipeLayout) findViewById(R.id.sample2);
-		sample2.setShowMode(SwipeLayout.ShowMode.LayDown);
-		sample2.addDrag(SwipeLayout.DragEdge.Right, sample2.findViewWithTag("Bottom2"));
-		//        sample2.setShowMode(SwipeLayout.ShowMode.PullOut);
-		sample2.findViewById(R.id.star).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Star", Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		sample2.findViewById(R.id.trash).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Trash Bin", Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		sample2.findViewById(R.id.magnifier).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Magnifier", Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		sample2.findViewById(R.id.click).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Yo", Toast.LENGTH_SHORT).show();
-			}
-		});
-		sample2.getSurfaceView().setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Click on surface", Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		//sample3
-
-		sample3 = (SwipeLayout) findViewById(R.id.sample3);
-		sample3.addDrag(SwipeLayout.DragEdge.Top, sample3.findViewWithTag("Bottom3"));
-		sample3.addRevealListener(R.id.bottom_wrapper_child1, new SwipeLayout.OnRevealListener() {
-			@Override
-			public void onReveal(View child, SwipeLayout.DragEdge edge, float fraction, int distance) {
-				View star = child.findViewById(R.id.star);
-				float d = child.getHeight() / 2 - star.getHeight() / 2;
-				ViewHelper.setTranslationY(star, d * fraction);
-				ViewHelper.setScaleX(star, fraction + 0.6f);
-				ViewHelper.setScaleY(star, fraction + 0.6f);
-				int c = (Integer) evaluate(fraction, Color.parseColor("#dddddd"), Color.parseColor("#4C535B"));
-				child.setBackgroundColor(c);
-			}
-		});
-		sample3.findViewById(R.id.bottom_wrapper_child1).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Yo!", Toast.LENGTH_SHORT).show();
-			}
-		});
-		sample3.getSurfaceView().setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "Click on surface", Toast.LENGTH_SHORT).show();
-			}
-		});
 	}
 
 	@Override
@@ -163,26 +43,22 @@ public class MainActivity extends MobileBaseActivity {
 
 	}
 
-	/*
-Color transition method.
- */
-	public Object evaluate(float fraction, Object startValue, Object endValue) {
-		int startInt = (Integer) startValue;
-		int startA = (startInt >> 24) & 0xff;
-		int startR = (startInt >> 16) & 0xff;
-		int startG = (startInt >> 8) & 0xff;
-		int startB = startInt & 0xff;
+	public void getDatas() {
+		mDatas = new ArrayList<>();
+		FileBean bean1 = new FileBean(1, 0, "root 1");
+		mDatas.add(bean1);
+		FileBean bean2 = new FileBean(2, 0, "root 2");
+		mDatas.add(bean2);
+		FileBean bean3 = new FileBean(3, 1, "1-1");
+		mDatas.add(bean3);
+		FileBean bean4 = new FileBean(4, 1, "1-2");
+		mDatas.add(bean4);
+		FileBean bean5 = new FileBean(5, 1, "1-3");
+		mDatas.add(bean5);
+		FileBean bean6 = new FileBean(6, 2, "2-1");
+		mDatas.add(bean6);
+		FileBean bean7 = new FileBean(7, 2, "2-2");
+		mDatas.add(bean7);
 
-		int endInt = (Integer) endValue;
-		int endA = (endInt >> 24) & 0xff;
-		int endR = (endInt >> 16) & 0xff;
-		int endG = (endInt >> 8) & 0xff;
-		int endB = endInt & 0xff;
-
-		return (int) ((startA + (int) (fraction * (endA - startA))) << 24) |
-			   (int) ((startR + (int) (fraction * (endR - startR))) << 16) |
-			   (int) ((startG + (int) (fraction * (endG - startG))) << 8) |
-			   (int) ((startB + (int) (fraction * (endB - startB))));
 	}
-
 }
