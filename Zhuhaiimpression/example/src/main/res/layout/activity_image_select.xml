@@ -11,6 +11,7 @@
         android:cacheColorHint="@android:color/transparent"
         android:numColumns="3"
         android:horizontalSpacing="3dp"
+        android:descendantFocusability="blocksDescendants"
         android:listSelector="@android:color/transparent"
         android:stretchMode="columnWidth"
         android:verticalSpacing="3dp">
@@ -21,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="#ee000000"
+        android:background="#ff000000"
         android:clipChildren="true">
 
         <TextView

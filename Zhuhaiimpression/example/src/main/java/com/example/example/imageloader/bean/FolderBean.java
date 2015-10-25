@@ -38,4 +38,37 @@ public class FolderBean {
 	public void setImgCount(int mImgCount) {
 		this.mImgCount = mImgCount;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		FolderBean that = (FolderBean) o;
+
+		if (mImgCount != that.mImgCount) {
+			return false;
+		}
+		if (mPath != null ? !mPath.equals(that.mPath) : that.mPath != null) {
+			return false;
+		}
+		if (mFirstImgPath != null ? !mFirstImgPath.equals(that.mFirstImgPath) : that.mFirstImgPath != null) {
+			return false;
+		}
+		return !(mName != null ? !mName.equals(that.mName) : that.mName != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = mPath != null ? mPath.hashCode() : 0;
+		result = 31 * result + (mFirstImgPath != null ? mFirstImgPath.hashCode() : 0);
+		result = 31 * result + (mName != null ? mName.hashCode() : 0);
+		result = 31 * result + mImgCount;
+		return result;
+	}
 }

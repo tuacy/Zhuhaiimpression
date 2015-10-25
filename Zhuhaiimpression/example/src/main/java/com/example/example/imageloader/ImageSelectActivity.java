@@ -9,8 +9,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -33,7 +35,7 @@ import java.util.Set;
 
 public class ImageSelectActivity extends MobileBaseActivity implements ListDirPopupWindow.OnPathSelectedListener {
 
-	private static final int MSG_OBTAIN_DATAS_SUCCESS = 0x000;
+	private static final int MSG_OBTAIN_DATA_SUCCESS = 0x000;
 
 	@Override
 	protected void onNetworkConnected(NetworkUtils.NetworkType type) {
@@ -75,7 +77,7 @@ public class ImageSelectActivity extends MobileBaseActivity implements ListDirPo
 			public void onClick(View v) {
 				mPopupWindow.setAnimationStyle(R.style.DirPopupWindowAnim);
 				mPopupWindow.showAsDropDown(mRlDirSelect, 0, 0);
-				lightOn(0.3f);
+				setAlpha(0.7f);
 			}
 		});
 	}
@@ -83,7 +85,7 @@ public class ImageSelectActivity extends MobileBaseActivity implements ListDirPo
 	private void initData() {
 		mUiHandler = new UiHandler(this);
 		if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			Toast.makeText(ImageSelectActivity.this, "no exteranl storage", Toast.LENGTH_SHORT).show();
+			Toast.makeText(ImageSelectActivity.this, "no external storage", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		mProgressDialog = ProgressDialog.show(ImageSelectActivity.this, null, "loading....");
@@ -131,7 +133,7 @@ public class ImageSelectActivity extends MobileBaseActivity implements ListDirPo
 					}
 				}
 				cursor.close();
-				mUiHandler.sendEmptyMessage(MSG_OBTAIN_DATAS_SUCCESS);
+				mUiHandler.sendEmptyMessage(MSG_OBTAIN_DATA_SUCCESS);
 
 			}
 		}.start();
@@ -170,17 +172,16 @@ public class ImageSelectActivity extends MobileBaseActivity implements ListDirPo
 		mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				lightOn(1.0f);
+				setAlpha(1.0f);
 			}
 		});
 		mPopupWindow.setOnPathSelectedListener(this);
 	}
 
-	private void lightOn(float alpha) {
+	private void setAlpha(float alpha) {
 		WindowManager.LayoutParams lp = getWindow().getAttributes();
 		lp.alpha = alpha;
 		getWindow().setAttributes(lp);
-
 	}
 
 	@Override
@@ -204,7 +205,7 @@ public class ImageSelectActivity extends MobileBaseActivity implements ListDirPo
 			final ImageSelectActivity activity = mActivityReference.get();
 			if (activity != null) {
 				switch (msg.what) {
-					case MSG_OBTAIN_DATAS_SUCCESS:
+					case MSG_OBTAIN_DATA_SUCCESS:
 						activity.mProgressDialog.dismiss();
 						activity.data2View();
 						activity.initPopupWindow();

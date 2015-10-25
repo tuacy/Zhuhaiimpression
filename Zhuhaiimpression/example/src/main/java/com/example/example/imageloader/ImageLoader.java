@@ -167,12 +167,15 @@ public class ImageLoader {
 		mPoolThreadHandler.sendEmptyMessage(MESSAGE_OBTAIN_TASK_FROM_QUEUE);
 	}
 
-	private Runnable getTaskFromQueue() {
-		if (Type.FIFO == mType) {
-			return mTaskQueue.getFirst();
-		} else {
-			return mTaskQueue.getLast();
+	private synchronized Runnable getTaskFromQueue() {
+		if (mTaskQueue.size() > 0) {
+			if (Type.FIFO == mType) {
+				return mTaskQueue.removeFirst();
+			} else {
+				return mTaskQueue.removeLast();
+			}
 		}
+		return null;
 	}
 
 	private ImageViewSize getImageViewSize(ImageView imageView) {
@@ -261,7 +264,7 @@ public class ImageLoader {
 		private ImageView mImageView;
 		private String    mPath;
 
-		public TaskRunnable(String path, ImageView imageView) {
+		public TaskRunnable(final String path, final ImageView imageView) {
 			mPath = path;
 			mImageView = imageView;
 		}
