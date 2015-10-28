@@ -26,8 +26,19 @@ public class DownloadManager {
 
 	private DownloadDispatcher mDownloadDispatcher = null;
 
+	/**
+	 * @param threadPoolThreadMax thread pool threads max count
+	 */
 	private DownloadManager(int threadPoolThreadMax) {
-		mDownloadDispatcher = new DownloadDispatcher(threadPoolThreadMax);
+		this(threadPoolThreadMax, DownloadRequestQueue.CAPACITY);
+	}
+
+	/**
+	 * @param threadPoolThreadMax thread pool threads max count
+	 * @param queueMaxCount       queue max count
+	 */
+	private DownloadManager(int threadPoolThreadMax, int queueMaxCount) {
+		mDownloadDispatcher = new DownloadDispatcher(threadPoolThreadMax, queueMaxCount);
 	}
 
 	public static DownloadManager getInstance() {
@@ -52,6 +63,23 @@ public class DownloadManager {
 		return mInstance;
 	}
 
+	public static DownloadManager getInstance(final int threadPoolThreadMax, final int queueMaxCount) {
+		if (null == mInstance) {
+			synchronized (DownloadManager.class) {
+				if (null == mInstance) {
+					mInstance = new DownloadManager(threadPoolThreadMax, queueMaxCount);
+				}
+			}
+		}
+		return mInstance;
+	}
+
+	/**
+	 * Add request to queue and ready to download
+	 *
+	 * @param request request
+	 * @return the id of download
+	 */
 	public int add(DownloadRequest request) {
 		if (request == null) {
 			throw new IllegalArgumentException("DownloadRequest cannot be null");

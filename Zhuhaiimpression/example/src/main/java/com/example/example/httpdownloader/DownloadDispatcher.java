@@ -32,14 +32,6 @@ public class DownloadDispatcher {
 	private DownloadRequestQueue mDownloadRequestQueue = null;
 	private DownloadDelivery     mDownloadDelivery     = null;
 
-	public DownloadDispatcher(int threadCount) {
-		mThreadPool = Executors.newFixedThreadPool(threadCount);
-		mSemaphoreThreadPool = new Semaphore(threadCount);
-		mDownloadRequestQueue = new DownloadRequestQueue(this);
-		mDownloadDelivery = new DownloadDelivery(new Handler(Looper.getMainLooper()));
-		initInternalScheduling();
-	}
-
 	public DownloadDispatcher(int threadCount, int queueMaxCount) {
 		mThreadPool = Executors.newFixedThreadPool(threadCount);
 		mSemaphoreThreadPool = new Semaphore(threadCount);

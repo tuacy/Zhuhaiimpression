@@ -4,9 +4,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DownloadRequestQueue {
@@ -18,7 +18,7 @@ public class DownloadRequestQueue {
 	/**
 	 * The default capacity of download request queue.
 	 */
-	private static final int CAPACITY = 20;
+	public static final int CAPACITY = 20;
 
 	/**
 	 * The queue of download request.
@@ -119,7 +119,6 @@ public class DownloadRequestQueue {
 	protected void finishRequest(DownloadRequest request) {
 		synchronized (mCurrentRequests) {
 			mCurrentRequests.remove(request);
-			//			mSemaphore.release();
 			mDownloadDispatcher.releaseThreadPoolSemaphore();
 		}
 	}
@@ -132,9 +131,19 @@ public class DownloadRequestQueue {
 	 */
 	protected DownloadRequest.DownloadState query(int downloadId) {
 		synchronized (mCurrentRequests) {
+			/** is in downloading list */
 			for (DownloadRequest request : mCurrentRequests) {
 				if (request.getDownloadId() == downloadId) {
 					return request.getDownloadState();
+				}
+			}
+			/** is in queue */
+			if (mDownloadQueue.size() > 0) {
+				DownloadRequest[] queueArray = mDownloadQueue.toArray(new DownloadRequest[mDownloadQueue.size()]);
+				for (int index = 0; index < queueArray.length; index++) {
+					if (queueArray[index].getDownloadId() == downloadId) {
+						return DownloadRequest.DownloadState.PENDING;
+					}
 				}
 			}
 		}
@@ -155,6 +164,16 @@ public class DownloadRequestQueue {
 					return request.getDownloadState();
 				}
 			}
+			/** is in queue */
+			if (mDownloadQueue.size() > 0) {
+				DownloadRequest[] queueArray = mDownloadQueue.toArray(new DownloadRequest[mDownloadQueue.size()]);
+				for (int index = 0; index < queueArray.length; index++) {
+					if (queueArray[index].getUrl().equals(url)) {
+						return DownloadRequest.DownloadState.PENDING;
+					}
+				}
+			}
+
 		}
 
 		return DownloadRequest.DownloadState.INVALID;
