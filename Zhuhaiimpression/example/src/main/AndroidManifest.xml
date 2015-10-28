@@ -44,7 +44,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.example.moveview.FingerMoveViewActivity"
+            android:name="com.example.example.httpdownloader.TextActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
