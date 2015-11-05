@@ -7,32 +7,19 @@ import java.util.List;
 public class Node {
 
 	private int    mId;
-	/**
-	 * 根节点的pid
-	 */
 	private int    mPid;
 	private String mName;
 
-	/**
-	 * 树的层级
-	 */
+
 	private int     mLevel;
-	/**
-	 * 该节点是否展开
-	 */
+
 	private boolean mExpand;
 
-	/**
-	 * 当前节点的图标
-	 */
+
 	private int  mIcon;
-	/**
-	 * 该节点的父节点
-	 */
+
 	private Node mParent;
-	/**
-	 * 该节点的子节点
-	 */
+
 	private List<Node> mChildren = new ArrayList<Node>();
 
 	public Node(int mId, int mPid, String mName) {
@@ -110,9 +97,6 @@ public class Node {
 		this.mChildren = children;
 	}
 
-	/**
-	 * 是否是根节点
-	 */
 	public boolean isRoot() {
 		return null == mParent;
 	}

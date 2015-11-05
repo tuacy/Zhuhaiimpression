@@ -39,9 +39,6 @@ public class TreeHelper {
 			nodes.add(node);
 		}
 
-		/**
-		 * 设置关系
-		 */
 		for (int i = 0; i < nodes.size(); i++) {
 			Node n = nodes.get(i);
 			for (int j = i + 1; j < nodes.size(); j++) {
@@ -57,9 +54,6 @@ public class TreeHelper {
 			}
 		}
 
-		/**
-		 * 设置icon
-		 */
 		for (Node node : nodes) {
 			setNodeIcon(node);
 		}
@@ -80,9 +74,6 @@ public class TreeHelper {
 	public static <T> List<Node> getSortNodes(List<T> datas, int defualExpandLevel) throws IllegalAccessException {
 		List<Node> sortNodes = new ArrayList<>();
 		List<Node> nodes = convertDatas2Nodes(datas);
-		/**
-		 * 获取树的跟节点
-		 */
 		List<Node> rootNodes = getRootNodes(nodes);
 		for(Node node : rootNodes) {
 			addNode(sortNodes, node, defualExpandLevel, 1);
