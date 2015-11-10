@@ -5,6 +5,7 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -25,11 +26,13 @@ public class ZoomImageView extends ImageView
 	private Matrix               mScaleMatrix          = null;
 	private ScaleGestureDetector mScaleGestureDetector = null;
 
-	private int     mLastPointCount = 0;
-	private float   mLastX          = 0;
-	private float   mLastY          = 0;
-	private int     mTouchSlop      = 0;
-	private boolean mIsCanDrag      = false;
+	private int     mLastPointCount      = 0;
+	private float   mLastX               = 0;
+	private float   mLastY               = 0;
+	private int     mTouchSlop           = 0;
+	private boolean mIsCanDrag           = false;
+	private boolean mIsCheckLeftAndRight = false;
+	private boolean mIsCheckTopAndBottom = false;
 
 
 	public ZoomImageView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -128,7 +131,7 @@ public class ZoomImageView extends ImageView
 		RectF rectF = new RectF();
 		Drawable drawable = getDrawable();
 		if (null != drawable) {
-			rectF.set(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicWidth());
+			rectF.set(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 			mScaleMatrix.mapRect(rectF);
 		}
 		return rectF;
@@ -205,15 +208,59 @@ public class ZoomImageView extends ImageView
 					mIsCanDrag = isMoveAction(dx, dy);
 				}
 				if (mIsCanDrag) {
-					mIsCanDrag = false;
+					RectF rectF = getMatrixRectF();
+					if (null != getDrawable()) {
+						mIsCheckLeftAndRight = mIsCheckTopAndBottom = true;
+						if (rectF.width() < getWidth()) {
+							mIsCheckLeftAndRight = false;
+							dx = 0;
+						}
+						if (rectF.height() < getHeight()) {
+							mIsCheckTopAndBottom = false;
+							dy = 0;
+						}
+						mScaleMatrix.postTranslate(dx, dy);
+						setImageMatrix(mScaleMatrix);
+						checkBorderWhenTranslate();
+					}
 				}
+				mLastX = x;
+				mLastY = y;
 				break;
 			case MotionEvent.ACTION_UP:
+			case MotionEvent.ACTION_CANCEL:
+				mLastPointCount = 0;
 				break;
 			case MotionEvent.ACTION_DOWN:
 				break;
 		}
 		return true;
+	}
+
+	private void checkBorderWhenTranslate() {
+		RectF rectF = getMatrixRectF();
+
+		float deltaX = 0;
+		float deltaY = 0;
+
+		int width = getWidth();
+		int height = getHeight();
+
+		if (rectF.top > 0 && mIsCheckTopAndBottom) {
+			deltaY = -rectF.top;
+		}
+		if (rectF.bottom < height && mIsCheckTopAndBottom) {
+			deltaY = height - rectF.bottom;
+		}
+		if (rectF.left > 0 && mIsCheckLeftAndRight) {
+			deltaX = -rectF.left;
+		}
+		if (rectF.right < width && mIsCheckLeftAndRight) {
+			deltaX = width - rectF.right;
+		}
+		mScaleMatrix.postTranslate(deltaX, deltaY);
+		setImageMatrix(mScaleMatrix);
+
 	}
 
 	private boolean isMoveAction(float dx, float dy) {
