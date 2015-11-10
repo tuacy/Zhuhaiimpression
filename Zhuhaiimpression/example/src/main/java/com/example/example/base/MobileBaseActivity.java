@@ -90,12 +90,12 @@ public abstract class MobileBaseActivity extends AppCompatActivity {
 	/**
 	 * network connected
 	 */
-	protected abstract void onNetworkConnected(NetworkUtils.NetworkType type);
+	protected void onNetworkConnected(NetworkUtils.NetworkType type){}
 
 	/**
 	 * network disconnected
 	 */
-	protected abstract void onNetworkDisConnected();
+	protected void onNetworkDisConnected(){}
 
 
 	/**

@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="click test"
-        android:background="?attr/selectableItemBackground"/>
+    <com.example.example.zoomimage.widget.ZoomImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/aaa"
+        />
 
 </LinearLayout>
