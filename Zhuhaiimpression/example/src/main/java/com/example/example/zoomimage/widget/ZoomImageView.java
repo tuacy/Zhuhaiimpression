@@ -21,9 +21,9 @@ import android.widget.ImageView;
 public class ZoomImageView extends ImageView
 	implements ViewTreeObserver.OnGlobalLayoutListener, ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener {
 
-	private float                mInitScale            = 0.0f;
-	private float                mMaxScale             = 0.0f;
-	private float                mMidScale             = 0.0f;
+	private float mInitScale;
+	private float mMaxScale;
+	private float mMidScale;
 	private Matrix               mScaleMatrix          = null;
 	private ScaleGestureDetector mScaleGestureDetector = null;
 
@@ -36,7 +36,7 @@ public class ZoomImageView extends ImageView
 	private boolean mIsCheckTopAndBottom = false;
 
 	private GestureDetector mGestureDetector = null;
-	private boolean mAutoScale = false;
+	private boolean         mIsAutoScale     = false;
 
 
 	public ZoomImageView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -53,22 +53,22 @@ public class ZoomImageView extends ImageView
 				float x = e.getX();
 				float y = e.getY();
 
-				if (mAutoScale) {
+				if (mIsAutoScale) {
 					return true;
 				}
 
-				mAutoScale = true;
-
 				if (getScale() < mMidScale) {
-//					mScaleMatrix.postScale(mMidScale / getScale(), mMidScale / getScale(), x, y);
-//					setImageMatrix(mScaleMatrix);
-//					checkBorderAndCenterWhenScale();
+					//					mScaleMatrix.postScale(mMidScale / getScale(), mMidScale / getScale(), x, y);
+					//					setImageMatrix(mScaleMatrix);
+					//					checkBorderAndCenterWhenScale();
 					postDelayed(new AutoScaleRunnable(mMidScale, x, y), 16);
+					mIsAutoScale = true;
 				} else {
-//					mScaleMatrix.postScale(mInitScale / getScale(), mInitScale / getScale(), x, y);
-//					setImageMatrix(mScaleMatrix);
-//					checkBorderAndCenterWhenScale();
+					//					mScaleMatrix.postScale(mInitScale / getScale(), mInitScale / getScale(), x, y);
+					//					setImageMatrix(mScaleMatrix);
+					//					checkBorderAndCenterWhenScale();
 					postDelayed(new AutoScaleRunnable(mInitScale, x, y), 16);
+					mIsAutoScale = true;
 				}
 				return true;
 			}
@@ -85,12 +85,12 @@ public class ZoomImageView extends ImageView
 
 	private class AutoScaleRunnable implements Runnable {
 
-		private final float BIGGER       = 1.07f;
-		private final float SMALL        = 0.93f;
-		private       float mTargetScale = 0.0f;
-		private       float mX           = 0.0f;
-		private       float mY           = 0.0f;
-		private       float mTempScale   = 0.0f;
+		private final float BIGGER = 1.07f;
+		private final float SMALL  = 0.93f;
+		private float mTargetScale;
+		private float mX;
+		private float mY;
+		private float mTempScale;
 
 		public AutoScaleRunnable(float mTargetScale, float mX, float mY) {
 			this.mTargetScale = mTargetScale;
@@ -110,13 +110,14 @@ public class ZoomImageView extends ImageView
 			checkBorderAndCenterWhenScale();
 			setImageMatrix(mScaleMatrix);
 			float currentScale = getScale();
-			if ((mTempScale > 1.0f && currentScale < mTargetScale) || (mTempScale < 1.0f && mTempScale > mTargetScale)) {
+			if ((mTempScale > 1.0f && currentScale < mTargetScale) || (mTempScale < 1.0f && currentScale > mTargetScale)) {
 				postDelayed(this, 16);
 			} else {
 				float scale = mTargetScale / currentScale;
 				mScaleMatrix.postScale(scale, scale, mX, mY);
 				checkBorderAndCenterWhenScale();
 				setImageMatrix(mScaleMatrix);
+				mIsAutoScale = false;
 			}
 		}
 	}
@@ -273,15 +274,18 @@ public class ZoomImageView extends ImageView
 			mIsCanDrag = false;
 		}
 		mLastPointCount = pointerCount;
+		RectF rectF = getMatrixRectF();
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_MOVE:
+				if (rectF.width() > getWidth() + 0.01 || rectF.height() > getHeight() + 0.01) {
+					getParent().requestDisallowInterceptTouchEvent(true);
+				}
 				float dx = x - mLastX;
 				float dy = y - mLastY;
 				if (!mIsCanDrag) {
 					mIsCanDrag = isMoveAction(dx, dy);
 				}
 				if (mIsCanDrag) {
-					RectF rectF = getMatrixRectF();
 					if (null != getDrawable()) {
 						mIsCheckLeftAndRight = mIsCheckTopAndBottom = true;
 						if (rectF.width() < getWidth()) {
@@ -306,6 +310,9 @@ public class ZoomImageView extends ImageView
 				mIsCanDrag = false;
 				break;
 			case MotionEvent.ACTION_DOWN:
+				if (rectF.width() > getWidth() + 0.01 || rectF.height() > getHeight() + 0.01) {
+					getParent().requestDisallowInterceptTouchEvent(true);
+				}
 				break;
 		}
 		return true;
