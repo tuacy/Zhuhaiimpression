@@ -5,7 +5,7 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -23,6 +23,7 @@ public class ZoomImageView extends ImageView
 
 	private float                mInitScale            = 0.0f;
 	private float                mMaxScale             = 0.0f;
+	private float                mMidScale             = 0.0f;
 	private Matrix               mScaleMatrix          = null;
 	private ScaleGestureDetector mScaleGestureDetector = null;
 
@@ -34,6 +35,9 @@ public class ZoomImageView extends ImageView
 	private boolean mIsCheckLeftAndRight = false;
 	private boolean mIsCheckTopAndBottom = false;
 
+	private GestureDetector mGestureDetector = null;
+	private boolean mAutoScale = false;
+
 
 	public ZoomImageView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
@@ -42,6 +46,33 @@ public class ZoomImageView extends ImageView
 		mScaleGestureDetector = new ScaleGestureDetector(context, this);
 		setOnTouchListener(this);
 		mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+
+		mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+			@Override
+			public boolean onDoubleTap(MotionEvent e) {
+				float x = e.getX();
+				float y = e.getY();
+
+				if (mAutoScale) {
+					return true;
+				}
+
+				mAutoScale = true;
+
+				if (getScale() < mMidScale) {
+//					mScaleMatrix.postScale(mMidScale / getScale(), mMidScale / getScale(), x, y);
+//					setImageMatrix(mScaleMatrix);
+//					checkBorderAndCenterWhenScale();
+					postDelayed(new AutoScaleRunnable(mMidScale, x, y), 16);
+				} else {
+//					mScaleMatrix.postScale(mInitScale / getScale(), mInitScale / getScale(), x, y);
+//					setImageMatrix(mScaleMatrix);
+//					checkBorderAndCenterWhenScale();
+					postDelayed(new AutoScaleRunnable(mInitScale, x, y), 16);
+				}
+				return true;
+			}
+		});
 	}
 
 	public ZoomImageView(Context context) {
@@ -50,6 +81,44 @@ public class ZoomImageView extends ImageView
 
 	public ZoomImageView(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
+	}
+
+	private class AutoScaleRunnable implements Runnable {
+
+		private final float BIGGER       = 1.07f;
+		private final float SMALL        = 0.93f;
+		private       float mTargetScale = 0.0f;
+		private       float mX           = 0.0f;
+		private       float mY           = 0.0f;
+		private       float mTempScale   = 0.0f;
+
+		public AutoScaleRunnable(float mTargetScale, float mX, float mY) {
+			this.mTargetScale = mTargetScale;
+			this.mX = mX;
+			this.mY = mY;
+			if (getScale() < mTargetScale) {
+				mTempScale = BIGGER;
+			}
+			if (getScale() > mTargetScale) {
+				mTempScale = SMALL;
+			}
+		}
+
+		@Override
+		public void run() {
+			mScaleMatrix.postScale(mTempScale, mTempScale, mX, mY);
+			checkBorderAndCenterWhenScale();
+			setImageMatrix(mScaleMatrix);
+			float currentScale = getScale();
+			if ((mTempScale > 1.0f && currentScale < mTargetScale) || (mTempScale < 1.0f && mTempScale > mTargetScale)) {
+				postDelayed(this, 16);
+			} else {
+				float scale = mTargetScale / currentScale;
+				mScaleMatrix.postScale(scale, scale, mX, mY);
+				checkBorderAndCenterWhenScale();
+				setImageMatrix(mScaleMatrix);
+			}
+		}
 	}
 
 	@Override
@@ -88,6 +157,7 @@ public class ZoomImageView extends ImageView
 		}
 
 		mInitScale = scale;
+		mMidScale = mInitScale * 2;
 		mMaxScale = mInitScale * 4;
 
 		int dx = getWidth() / 2 - dw / 2;
@@ -153,7 +223,7 @@ public class ZoomImageView extends ImageView
 				deltaX = width - rectF.right;
 			}
 		}
-		if (rectF.height() > height) {
+		if (rectF.height() >= height) {
 			if (rectF.top > 0) {
 				deltaY = -rectF.top;
 			}
@@ -184,6 +254,9 @@ public class ZoomImageView extends ImageView
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
+		if (mGestureDetector.onTouchEvent(event)) {
+			return true;
+		}
 		mScaleGestureDetector.onTouchEvent(event);
 		float x = 0;
 		float y = 0;
@@ -230,6 +303,7 @@ public class ZoomImageView extends ImageView
 			case MotionEvent.ACTION_UP:
 			case MotionEvent.ACTION_CANCEL:
 				mLastPointCount = 0;
+				mIsCanDrag = false;
 				break;
 			case MotionEvent.ACTION_DOWN:
 				break;
